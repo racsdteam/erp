@@ -1,0 +1,51 @@
+Date: Wed, 15 Dec 2021 10:51:33 +0000
+To: 8 <Jkanyange@rac.co.rw>
+From: RAC SYSTEM <no_reply@rac.co.rw>
+Subject: ERP Notification
+Message-ID: <1eedf1bb3a9c960a39baa4a90c3d1756@www.rac.co.rw>
+X-Mailer: PHPMailer 5.2.27 (https://github.com/PHPMailer/PHPMailer)
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="b1_1eedf1bb3a9c960a39baa4a90c3d1756"
+Content-Transfer-Encoding: 8bit
+
+This is a multi-part message in MIME format.
+
+--b1_1eedf1bb3a9c960a39baa4a90c3d1756
+Content-Type: text/plain; charset=us-ascii
+
+Hello Josephine  Kanyange ,
+     this is to notify you that there is an incoming Requisition in ERP System 
+    
+     From  : Ndayambaje  Jackson /Budget  And Payables Accountant,
+     Date : 2021-12-15 10:51:33,
+         Follow the link below to login:
+    https://www.rac.co.rw/erp/site/login
+
+
+--b1_1eedf1bb3a9c960a39baa4a90c3d1756
+Content-Type: text/html; charset=us-ascii
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+    </head>
+<body>
+        <div class="user-notification">
+     <p>Hello Josephine  Kanyange ,</p>
+     <p>this is to notify you that there is an incoming Requisition in ERP System </p>
+    
+     <p>From  : Ndayambaje  Jackson /Budget  And Payables Accountant,</p>
+     <p>Date : 2021-12-15 10:51:33,</p>
+         <p>Follow the link below to login:</p>
+    <p><a href="https://www.rac.co.rw/erp/site/login">https://www.rac.co.rw/erp/site/login</a></p>
+   
+</div>
+    </body>
+</html>
+
+
+
+--b1_1eedf1bb3a9c960a39baa4a90c3d1756--

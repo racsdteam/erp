@@ -1,0 +1,77 @@
+{
+    "name": "yiisoft/yii2-app-advanced",
+    "description": "Yii 2 Advanced Project Template",
+    "keywords": ["yii2", "framework", "advanced", "project template"],
+    "homepage": "http://www.yiiframework.com/",
+    "type": "project",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/yiisoft/yii2/issues?state=open",
+        "forum": "http://www.yiiframework.com/forum/",
+        "wiki": "http://www.yiiframework.com/wiki/",
+        "irc": "irc://irc.freenode.net/yii",
+        "source": "https://github.com/yiisoft/yii2"
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii2": "~2.0.6",
+        "yiisoft/yii2-bootstrap": "~2.0.0",
+        "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
+		 "kartik-v/yii2-detail-view": "@dev",
+        "zyx/zyx-phpmailer": "^0.9.4",
+        "yii2assets/yii2-pdfjs": ">=1.0",
+		"kartik-v/yii2-widget-activeform": "@dev",
+        "kartik-v/yii2-widget-alert": "*",
+        "kartik-v/yii2-widget-growl": "*",
+        "aryelds/yii2-sweet-alert": "@dev",
+        
+       
+        "kartik-v/yii2-widget-select2": "@dev",
+        "kartik-v/yii2-widget-fileinput": "@dev",
+        
+        "kop/yii2-conditional-validator": "dev-master",
+       
+        "borales/yii2-phone-input": "*",
+       
+       
+        "softark/yii2-dual-listbox": "^1.0",
+        "kartik-v/yii2-popover-x": "*",
+        "edwinhaq/yii2-simple-dual-listbox": "*",
+        "drsdre/yii2-wizardwidget": "*",
+        "yii2mod/yii2-bootstrap-notify": "*",
+        "phpoffice/phpexcel": "^1.8",
+       
+         "vivekmarakana/yii2-timeline-widget": "dev-master",
+		 "symfony/dom-crawler": "2.8",
+          "symfony/css-selector": "2.8",
+        "wbraganca/yii2-dynamicform": "*",
+       "daltcore/lara-pdf-merger": "^1.1",
+        "2amigos/yii2-tinymce-widget": "~1.1",
+        "kartik-v/yii2-tree-manager": "dev-master"
+       
+    },
+    "require-dev": {
+        "yiisoft/yii2-debug": "~2.0.0",
+        "yiisoft/yii2-gii": "~2.0.0",
+        "yiisoft/yii2-faker": "~2.0.0",
+        "codeception/base": "^2.2.3",
+        "codeception/verify": "~0.3.1"
+    },
+	"autoload": {
+    "classmap": [
+      "vendor/daltcore/lara-pdf-merger/src/LynX39/LaraPdfMerger"
+      
+     
+    ]
+},
+    "config": {
+        "process-timeout": 1800
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
+}

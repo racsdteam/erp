@@ -1,0 +1,76 @@
+
+*{
+  font-family: Helvetica , Geneva, sans-serif !important;
+   font-style: normal;
+   font-variant: normal;
+   font-weight: 600;
+   font-size:12pt !important;
+   color:#000000 !important;
+ 
+}
+
+h1 { font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: bold; line-height: 26.4px; } 
+h3 { font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: bold; line-height: 15.4px; }
+
+ .tbl-report th ,.tbl-report td{
+  white-space: nowrap
+}
+.tbl-report th {
+  word-wrap: break-word;
+}
+.tbl-report th{
+     white-space: pre-line;
+ }
+
+
+table.tbl-report,table.tbl-custom{
+    border: 0.1mm solid #000000 !important;
+    border-collapse: collapse;
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+    font-size:1.17rem;
+}
+
+
+
+
+.tbl-report tr td,  .tbl-report tr th,.tbl-custom tr td,  .tbl-custom tr th {
+  border: 0.1mm solid #000000;
+  vertical-align: bottom;
+ 
+}
+
+.text-left{
+ text-align:left;   
+}
+
+.total{
+    padding:5px 5px;
+    
+}
+
+th.rotate{
+   
+    padding:5px 5px 5px; /*----------top:auto--left----------------------------*/
+    font-size:1.4rem;
+    }
+    
+.tbl-dc tr th.rotate{
+  font-size:0.9rem;   
+    
+}
+
+td.data-cell{
+  
+  padding:5px;
+  font-size:1.2rem;
+}
+
+.tbl-dc tr td.data-cell{
+  font-size:0.8rem;   
+    
+} 
+
+
+

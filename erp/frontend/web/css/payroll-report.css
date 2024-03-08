@@ -1,0 +1,46 @@
+   body {font-family: "Times New Roman" ,sans-serif; 
+	font-size: 10pt;
+	
+}
+
+     .contentTable th {
+  word-wrap: break-word;
+}
+
+table.contentTable{
+    
+    border-collapse: collapse;
+}
+
+ .contentTable tr td, .contentTable tr th {
+  border: 0.1mm solid #000000;
+  vertical-align: bottom;
+  
+}
+
+
+th.rotate {
+ 
+ text-align:left;
+ padding: 2mm;
+ font-size: 11pt;
+
+
+
+}
+th.rotate > div {
+  writing-mode: vertical-rl;
+  transform: rotate(-180deg);
+
+}
+.textH {
+  height: 200px;
+   white-space: pre-line;
+   
+}
+
+.text-left th{
+ 
+ text-align:left;   
+    
+}

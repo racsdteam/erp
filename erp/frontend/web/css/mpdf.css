@@ -1,0 +1,23 @@
+*{
+  font-family: "Times New Roman", Times, sans-serif !important;
+  color:#000 !important;
+  font-size:11pt !important;
+}
+
+body
+{
+font-family: "Times New Roman", Times, sans-serif;
+color:#000 !important;
+margin:0 !important;
+padding:0 !important;
+font-size:11pt !important;
+}
+
+.table-bordered{
+    border: 1px solid #000 !important;
+}
+
+
+thead { page-break-inside: avoid }
+tfoot { display: table-row-group }
+tr { page-break-inside: avoid }

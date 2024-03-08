@@ -1,0 +1,26 @@
+#prevent directory listing
+
+
+Options -Indexes
+IndexIgnore */* 
+
+#follow symbolic links
+Options followSymlinks
+
+RewriteEngine On
+RewriteRule ^admin(/.+)?$ backend/web/$1 [L,PT]
+RewriteRule ^admin/(.+)?$ backend/web/$1 [L,PT]
+RewriteRule ^(.+)?$ frontend/web/$1
+
+RewriteEngine On
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Always set these headers for CORS. requests not handled by index.php
+    Header always set Access-Control-Max-Age 1728000
+    Header always set Access-Control-Allow-Origin: "https://www.rac.co.rw"
+    Header always set Access-Control-Allow-Methods: "GET,POST,OPTIONS,DELETE,PUT"
+    Header always set Access-Control-Allow-Headers: "origin,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Range"
+    Header always set Access-Control-Expose-Headers:  Content-Range
+    Header always set Access-Control-Allow-Credentials true
+    #Header alwyas set Access-Control-Expose-Headers: "Accept-Ranges, Content-Encoding, Content-Length, Content-Range"
