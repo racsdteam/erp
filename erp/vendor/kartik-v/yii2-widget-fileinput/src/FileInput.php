@@ -1,23 +1,26 @@
 <?php
 
 /**
- * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2019
+ * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2022
  * @package yii2-widgets
  * @subpackage yii2-widget-fileinput
- * @version 1.0.9
+ * @version 1.1.1
  */
 
 namespace kartik\file;
 
+use Exception;
+use kartik\base\BootstrapIconsAsset;
+use ReflectionException;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use kartik\base\InputWidget;
-use kartik\base\TranslationTrait;
 
 /**
- * Wrapper for the Bootstrap FileInput JQuery Plugin by Krajee. The FileInput widget is styled for Bootstrap 3.x
- * & 4.x with ability to multiple file selection and preview, format button styles and inputs. Runs on all modern
+ * Wrapper for the Bootstrap FileInput JQuery Plugin by Krajee. The FileInput widget is styled for Bootstrap 3.x,
+ * 4.x & 5.x with ability to multiple file selection and preview, format button styles and inputs. Runs on all modern
  * browsers supporting HTML5 File Inputs and File Processing API. For browser versions IE9 and below, this widget
  * will gracefully degrade to a native HTML file input.
  *
@@ -41,12 +44,18 @@ class FileInput extends InputWidget
     public $autoOrientImages = true;
 
     /**
+     * @var boolean whether to use advanced mime parsing to detect file content irrespective of the file name extension
+     */
+    public $autoFileTypeParsing = true;
+
+    /**
      * @var boolean whether to load sortable plugin to rearrange initial preview images on client side
      */
     public $sortThumbs = true;
 
     /**
      * @var boolean whether to load dom purify plugin to purify HTML content in purfiy
+     * @deprecated since v1.1.1 (not required since bootstrap-fileinput v5.1.3)
      */
     public $purifyHtml = true;
 
@@ -69,12 +78,22 @@ class FileInput extends InputWidget
     /**
      * @var array the list of inbuilt themes
      */
-    protected static $_themes = ['fa', 'fas', 'gly', 'explorer', 'explorer-fa', 'explorer-fas'];
+    protected static $_themes = [
+        'bs5',
+        'fa4',
+        'fa5',
+        'fa6',
+        'gly',
+        'explorer',
+        'explorer-fa4',
+        'explorer-fa5',
+        'explorer-fa6',
+    ];
 
     /**
      * @inheritdoc
-     * @throws \ReflectionException
-     * @throws \yii\base\InvalidConfigException
+     * @throws ReflectionException
+     * @throws InvalidConfigException
      */
     public function run()
     {
@@ -83,14 +102,15 @@ class FileInput extends InputWidget
 
     /**
      * Initializes widget
-     * @throws \ReflectionException
-     * @throws \yii\base\InvalidConfigException
+     *
+     * @throws ReflectionException
+     * @throws InvalidConfigException
      */
     protected function initWidget()
     {
         $this->_msgCat = 'fileinput';
         $this->initI18N(__DIR__);
-        $this->initLanguage();
+        $this->initLanguage('language', true);
         $this->registerAssets();
         if ($this->pluginLoading) {
             Html::addCssClass($this->options, 'file-loading');
@@ -104,7 +124,8 @@ class FileInput extends InputWidget
         /**
          * Auto-set multiple file upload naming convention
          */
-        if (ArrayHelper::getValue($this->options, 'multiple')) {
+        if (ArrayHelper::getValue($this->options, 'multiple') && !ArrayHelper::getValue($this->pluginOptions,
+                'uploadUrl')) {
             $hasModel = $this->hasModel();
             if ($hasModel && strpos($this->attribute, '[]') === false) {
                 $this->attribute .= '[]';
@@ -113,28 +134,29 @@ class FileInput extends InputWidget
             }
         }
         $input = $this->getInput('fileInput');
-        $script = 'document.getElementById("' . $this->options['id'] . '").className.replace(/\bfile-loading\b/,"");';
+        $script = 'document.getElementById("'.$this->options['id'].'").className.replace(/\bfile-loading\b/,"");';
         if ($this->showMessage) {
             $validation = ArrayHelper::getValue($this->pluginOptions, 'showPreview', true) ?
                 Yii::t('fileinput', 'file preview and multiple file upload') :
                 Yii::t('fileinput', 'multiple file upload');
-            $message = '<strong>' . Yii::t('fileinput', 'Note:') . '</strong> ' .
+            $message = '<strong>'.Yii::t('fileinput', 'Note:').'</strong> '.
                 Yii::t(
                     'fileinput',
                     'Your browser does not support {validation}. Try an alternative or more recent browser to access these features.',
                     ['validation' => $validation]
                 );
-            $content = Html::tag('div', $message, $this->messageOptions) . "<script>{$script};</script>";
-            $input .= "\n" . $this->validateIE($content);
+            $content = Html::tag('div', $message, $this->messageOptions)."<script>{$script};</script>";
+            $input .= "\n".$this->validateIE($content);
         }
+
         return $input;
     }
 
     /**
      * Validates and returns content based on IE browser version validation
      *
-     * @param string $content
-     * @param string $validation
+     * @param  string  $content
+     * @param  string  $validation
      *
      * @return string
      */
@@ -145,18 +167,26 @@ class FileInput extends InputWidget
 
     /**
      * Registers the asset bundle and locale
-     * @throws \yii\base\InvalidConfigException
+     *
+     * @throws InvalidConfigException|Exception
      */
     public function registerAssetBundle()
     {
         $view = $this->getView();
         $this->pluginOptions['resizeImage'] = $this->resizeImages;
         $this->pluginOptions['autoOrientImage'] = $this->autoOrientImages;
+        if ($this->autoFileTypeParsing) {
+            FileTypeParserAsset::register($view);
+        }
         if ($this->resizeImages || $this->autoOrientImages) {
             PiExifAsset::register($view);
         }
-        if (empty($this->pluginOptions['theme']) && $this->isBs4()) {
-            $this->pluginOptions['theme'] = 'fas';
+        if (empty($this->pluginOptions['theme'])) {
+            if ($this->isBs(3)) {
+                $this->pluginOptions['theme'] = 'gly';
+            } else {
+                BootstrapIconsAsset::register($view);
+            }
         }
         $theme = ArrayHelper::getValue($this->pluginOptions, 'theme');
         if (!empty($theme) && in_array($theme, self::$_themes)) {
@@ -165,16 +195,13 @@ class FileInput extends InputWidget
         if ($this->sortThumbs) {
             SortableAsset::register($view);
         }
-        if ($this->purifyHtml) {
-            DomPurifyAsset::register($view);
-            $this->pluginOptions['purifyHtml'] = true;
-        }
         FileInputAsset::register($view)->addLanguage($this->language, '', 'js/locales');
     }
 
     /**
      * Registers the needed assets
-     * @throws \yii\base\InvalidConfigException
+     *
+     * @throws InvalidConfigException
      */
     public function registerAssets()
     {

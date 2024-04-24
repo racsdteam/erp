@@ -1,247 +1,220 @@
 /**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- *
- * Version: 5.1.3 (2019-12-04)
+ * TinyMCE version 7.0.0 (2024-03-20)
  */
-(function (domGlobals) {
+
+(function () {
     'use strict';
 
-    var Cell = function (initial) {
-      var value = initial;
-      var get = function () {
+    const Cell = initial => {
+      let value = initial;
+      const get = () => {
         return value;
       };
-      var set = function (v) {
+      const set = v => {
         value = v;
       };
-      var clone = function () {
-        return Cell(get());
-      };
       return {
-        get: get,
-        set: set,
-        clone: clone
+        get,
+        set
       };
     };
 
-    var global = tinymce.util.Tools.resolve('tinymce.PluginManager');
+    var global$2 = tinymce.util.Tools.resolve('tinymce.PluginManager');
 
-    var get = function (fullscreenState) {
-      return {
-        isFullscreen: function () {
-          return fullscreenState.get() !== null;
-        }
+    const get$5 = fullscreenState => ({ isFullscreen: () => fullscreenState.get() !== null });
+
+    const hasProto = (v, constructor, predicate) => {
+      var _a;
+      if (predicate(v, constructor.prototype)) {
+        return true;
+      } else {
+        return ((_a = v.constructor) === null || _a === void 0 ? void 0 : _a.name) === constructor.name;
+      }
+    };
+    const typeOf = x => {
+      const t = typeof x;
+      if (x === null) {
+        return 'null';
+      } else if (t === 'object' && Array.isArray(x)) {
+        return 'array';
+      } else if (t === 'object' && hasProto(x, String, (o, proto) => proto.isPrototypeOf(o))) {
+        return 'string';
+      } else {
+        return t;
+      }
+    };
+    const isType$1 = type => value => typeOf(value) === type;
+    const isSimpleType = type => value => typeof value === type;
+    const eq$1 = t => a => t === a;
+    const isString = isType$1('string');
+    const isObject = isType$1('object');
+    const isArray = isType$1('array');
+    const isNull = eq$1(null);
+    const isBoolean = isSimpleType('boolean');
+    const isUndefined = eq$1(undefined);
+    const isNullable = a => a === null || a === undefined;
+    const isNonNullable = a => !isNullable(a);
+    const isFunction = isSimpleType('function');
+    const isNumber = isSimpleType('number');
+
+    const noop = () => {
+    };
+    const compose = (fa, fb) => {
+      return (...args) => {
+        return fa(fb.apply(null, args));
       };
     };
-    var Api = { get: get };
-
-    var noop = function () {
-    };
-    var constant = function (value) {
-      return function () {
+    const compose1 = (fbc, fab) => a => fbc(fab(a));
+    const constant = value => {
+      return () => {
         return value;
       };
     };
-    var never = constant(false);
-    var always = constant(true);
+    function curry(fn, ...initialArgs) {
+      return (...restArgs) => {
+        const all = initialArgs.concat(restArgs);
+        return fn.apply(null, all);
+      };
+    }
+    const never = constant(false);
+    const always = constant(true);
 
-    var none = function () {
-      return NONE;
-    };
-    var NONE = function () {
-      var eq = function (o) {
-        return o.isNone();
-      };
-      var call = function (thunk) {
-        return thunk();
-      };
-      var id = function (n) {
-        return n;
-      };
-      var me = {
-        fold: function (n, s) {
-          return n();
-        },
-        is: never,
-        isSome: never,
-        isNone: always,
-        getOr: id,
-        getOrThunk: call,
-        getOrDie: function (msg) {
-          throw new Error(msg || 'error: getOrDie called on none.');
-        },
-        getOrNull: constant(null),
-        getOrUndefined: constant(undefined),
-        or: id,
-        orThunk: call,
-        map: none,
-        each: noop,
-        bind: none,
-        exists: never,
-        forall: always,
-        filter: none,
-        equals: eq,
-        equals_: eq,
-        toArray: function () {
-          return [];
-        },
-        toString: constant('none()')
-      };
-      if (Object.freeze) {
-        Object.freeze(me);
+    class Optional {
+      constructor(tag, value) {
+        this.tag = tag;
+        this.value = value;
       }
-      return me;
-    }();
-    var some = function (a) {
-      var constant_a = constant(a);
-      var self = function () {
-        return me;
-      };
-      var bind = function (f) {
-        return f(a);
-      };
-      var me = {
-        fold: function (n, s) {
-          return s(a);
-        },
-        is: function (v) {
-          return a === v;
-        },
-        isSome: always,
-        isNone: never,
-        getOr: constant_a,
-        getOrThunk: constant_a,
-        getOrDie: constant_a,
-        getOrNull: constant_a,
-        getOrUndefined: constant_a,
-        or: self,
-        orThunk: self,
-        map: function (f) {
-          return some(f(a));
-        },
-        each: function (f) {
-          f(a);
-        },
-        bind: bind,
-        exists: bind,
-        forall: bind,
-        filter: function (f) {
-          return f(a) ? me : NONE;
-        },
-        toArray: function () {
-          return [a];
-        },
-        toString: function () {
-          return 'some(' + a + ')';
-        },
-        equals: function (o) {
-          return o.is(a);
-        },
-        equals_: function (o, elementEq) {
-          return o.fold(never, function (b) {
-            return elementEq(a, b);
-          });
+      static some(value) {
+        return new Optional(true, value);
+      }
+      static none() {
+        return Optional.singletonNone;
+      }
+      fold(onNone, onSome) {
+        if (this.tag) {
+          return onSome(this.value);
+        } else {
+          return onNone();
         }
-      };
-      return me;
-    };
-    var from = function (value) {
-      return value === null || value === undefined ? NONE : some(value);
-    };
-    var Option = {
-      some: some,
-      none: none,
-      from: from
-    };
-
-    var value = function () {
-      var subject = Cell(Option.none());
-      var clear = function () {
-        subject.set(Option.none());
-      };
-      var set = function (s) {
-        subject.set(Option.some(s));
-      };
-      var on = function (f) {
-        subject.get().each(f);
-      };
-      var isSet = function () {
-        return subject.get().isSome();
-      };
-      return {
-        clear: clear,
-        set: set,
-        isSet: isSet,
-        on: on
-      };
-    };
-
-    var typeOf = function (x) {
-      if (x === null) {
-        return 'null';
       }
-      var t = typeof x;
-      if (t === 'object' && (Array.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'Array')) {
-        return 'array';
+      isSome() {
+        return this.tag;
       }
-      if (t === 'object' && (String.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'String')) {
-        return 'string';
+      isNone() {
+        return !this.tag;
       }
-      return t;
-    };
-    var isType = function (type) {
-      return function (value) {
-        return typeOf(value) === type;
-      };
-    };
-    var isString = isType('string');
-    var isArray = isType('array');
-    var isBoolean = isType('boolean');
-    var isFunction = isType('function');
-    var isNumber = isType('number');
+      map(mapper) {
+        if (this.tag) {
+          return Optional.some(mapper(this.value));
+        } else {
+          return Optional.none();
+        }
+      }
+      bind(binder) {
+        if (this.tag) {
+          return binder(this.value);
+        } else {
+          return Optional.none();
+        }
+      }
+      exists(predicate) {
+        return this.tag && predicate(this.value);
+      }
+      forall(predicate) {
+        return !this.tag || predicate(this.value);
+      }
+      filter(predicate) {
+        if (!this.tag || predicate(this.value)) {
+          return this;
+        } else {
+          return Optional.none();
+        }
+      }
+      getOr(replacement) {
+        return this.tag ? this.value : replacement;
+      }
+      or(replacement) {
+        return this.tag ? this : replacement;
+      }
+      getOrThunk(thunk) {
+        return this.tag ? this.value : thunk();
+      }
+      orThunk(thunk) {
+        return this.tag ? this : thunk();
+      }
+      getOrDie(message) {
+        if (!this.tag) {
+          throw new Error(message !== null && message !== void 0 ? message : 'Called getOrDie on None');
+        } else {
+          return this.value;
+        }
+      }
+      static from(value) {
+        return isNonNullable(value) ? Optional.some(value) : Optional.none();
+      }
+      getOrNull() {
+        return this.tag ? this.value : null;
+      }
+      getOrUndefined() {
+        return this.value;
+      }
+      each(worker) {
+        if (this.tag) {
+          worker(this.value);
+        }
+      }
+      toArray() {
+        return this.tag ? [this.value] : [];
+      }
+      toString() {
+        return this.tag ? `some(${ this.value })` : 'none()';
+      }
+    }
+    Optional.singletonNone = new Optional(false);
 
-    var nativeSlice = Array.prototype.slice;
-    var nativePush = Array.prototype.push;
-    var map = function (xs, f) {
-      var len = xs.length;
-      var r = new Array(len);
-      for (var i = 0; i < len; i++) {
-        var x = xs[i];
+    const nativePush = Array.prototype.push;
+    const map = (xs, f) => {
+      const len = xs.length;
+      const r = new Array(len);
+      for (let i = 0; i < len; i++) {
+        const x = xs[i];
         r[i] = f(x, i);
       }
       return r;
     };
-    var each = function (xs, f) {
-      for (var i = 0, len = xs.length; i < len; i++) {
-        var x = xs[i];
+    const each$1 = (xs, f) => {
+      for (let i = 0, len = xs.length; i < len; i++) {
+        const x = xs[i];
         f(x, i);
       }
     };
-    var filter = function (xs, pred) {
-      var r = [];
-      for (var i = 0, len = xs.length; i < len; i++) {
-        var x = xs[i];
+    const filter$1 = (xs, pred) => {
+      const r = [];
+      for (let i = 0, len = xs.length; i < len; i++) {
+        const x = xs[i];
         if (pred(x, i)) {
           r.push(x);
         }
       }
       return r;
     };
-    var find = function (xs, pred) {
-      for (var i = 0, len = xs.length; i < len; i++) {
-        var x = xs[i];
+    const findUntil = (xs, pred, until) => {
+      for (let i = 0, len = xs.length; i < len; i++) {
+        const x = xs[i];
         if (pred(x, i)) {
-          return Option.some(x);
+          return Optional.some(x);
+        } else if (until(x, i)) {
+          break;
         }
       }
-      return Option.none();
+      return Optional.none();
     };
-    var flatten = function (xs) {
-      var r = [];
-      for (var i = 0, len = xs.length; i < len; ++i) {
+    const find$1 = (xs, pred) => {
+      return findUntil(xs, pred, never);
+    };
+    const flatten = xs => {
+      const r = [];
+      for (let i = 0, len = xs.length; i < len; ++i) {
         if (!isArray(xs[i])) {
           throw new Error('Arr.flatten item ' + i + ' was not an array, input: ' + xs);
         }
@@ -249,285 +222,376 @@
       }
       return r;
     };
-    var bind = function (xs, f) {
-      var output = map(xs, f);
-      return flatten(output);
-    };
-    var from$1 = isFunction(Array.from) ? Array.from : function (x) {
-      return nativeSlice.call(x);
+    const bind$3 = (xs, f) => flatten(map(xs, f));
+    const get$4 = (xs, i) => i >= 0 && i < xs.length ? Optional.some(xs[i]) : Optional.none();
+    const head = xs => get$4(xs, 0);
+    const findMap = (arr, f) => {
+      for (let i = 0; i < arr.length; i++) {
+        const r = f(arr[i], i);
+        if (r.isSome()) {
+          return r;
+        }
+      }
+      return Optional.none();
     };
 
-    var keys = Object.keys;
-    var each$1 = function (obj, f) {
-      var props = keys(obj);
-      for (var k = 0, len = props.length; k < len; k++) {
-        var i = props[k];
-        var x = obj[i];
+    const lift2 = (oa, ob, f) => oa.isSome() && ob.isSome() ? Optional.some(f(oa.getOrDie(), ob.getOrDie())) : Optional.none();
+
+    const singleton = doRevoke => {
+      const subject = Cell(Optional.none());
+      const revoke = () => subject.get().each(doRevoke);
+      const clear = () => {
+        revoke();
+        subject.set(Optional.none());
+      };
+      const isSet = () => subject.get().isSome();
+      const get = () => subject.get();
+      const set = s => {
+        revoke();
+        subject.set(Optional.some(s));
+      };
+      return {
+        clear,
+        isSet,
+        get,
+        set
+      };
+    };
+    const unbindable = () => singleton(s => s.unbind());
+    const value = () => {
+      const subject = singleton(noop);
+      const on = f => subject.get().each(f);
+      return {
+        ...subject,
+        on
+      };
+    };
+
+    const first = (fn, rate) => {
+      let timer = null;
+      const cancel = () => {
+        if (!isNull(timer)) {
+          clearTimeout(timer);
+          timer = null;
+        }
+      };
+      const throttle = (...args) => {
+        if (isNull(timer)) {
+          timer = setTimeout(() => {
+            timer = null;
+            fn.apply(null, args);
+          }, rate);
+        }
+      };
+      return {
+        cancel,
+        throttle
+      };
+    };
+
+    const keys = Object.keys;
+    const each = (obj, f) => {
+      const props = keys(obj);
+      for (let k = 0, len = props.length; k < len; k++) {
+        const i = props[k];
+        const x = obj[i];
         f(x, i);
       }
     };
 
-    var contains = function (str, substr) {
-      return str.indexOf(substr) !== -1;
-    };
+    const Global = typeof window !== 'undefined' ? window : Function('return this;')();
 
-    var isSupported = function (dom) {
-      return dom.style !== undefined && isFunction(dom.style.getPropertyValue);
-    };
-
-    var fromHtml = function (html, scope) {
-      var doc = scope || domGlobals.document;
-      var div = doc.createElement('div');
-      div.innerHTML = html;
-      if (!div.hasChildNodes() || div.childNodes.length > 1) {
-        domGlobals.console.error('HTML does not have a single root node', html);
-        throw new Error('HTML must have a single root node');
+    const path = (parts, scope) => {
+      let o = scope !== undefined && scope !== null ? scope : Global;
+      for (let i = 0; i < parts.length && o !== undefined && o !== null; ++i) {
+        o = o[parts[i]];
       }
-      return fromDom(div.childNodes[0]);
+      return o;
     };
-    var fromTag = function (tag, scope) {
-      var doc = scope || domGlobals.document;
-      var node = doc.createElement(tag);
-      return fromDom(node);
+    const resolve = (p, scope) => {
+      const parts = p.split('.');
+      return path(parts, scope);
     };
-    var fromText = function (text, scope) {
-      var doc = scope || domGlobals.document;
-      var node = doc.createTextNode(text);
-      return fromDom(node);
+
+    const unsafe = (name, scope) => {
+      return resolve(name, scope);
     };
-    var fromDom = function (node) {
-      if (node === null || node === undefined) {
-        throw new Error('Node cannot be null or undefined');
+    const getOrDie = (name, scope) => {
+      const actual = unsafe(name, scope);
+      if (actual === undefined || actual === null) {
+        throw new Error(name + ' not available on this browser');
       }
-      return { dom: constant(node) };
-    };
-    var fromPoint = function (docElm, x, y) {
-      var doc = docElm.dom();
-      return Option.from(doc.elementFromPoint(x, y)).map(fromDom);
-    };
-    var Element = {
-      fromHtml: fromHtml,
-      fromTag: fromTag,
-      fromText: fromText,
-      fromDom: fromDom,
-      fromPoint: fromPoint
+      return actual;
     };
 
-    var ATTRIBUTE = domGlobals.Node.ATTRIBUTE_NODE;
-    var CDATA_SECTION = domGlobals.Node.CDATA_SECTION_NODE;
-    var COMMENT = domGlobals.Node.COMMENT_NODE;
-    var DOCUMENT = domGlobals.Node.DOCUMENT_NODE;
-    var DOCUMENT_TYPE = domGlobals.Node.DOCUMENT_TYPE_NODE;
-    var DOCUMENT_FRAGMENT = domGlobals.Node.DOCUMENT_FRAGMENT_NODE;
-    var ELEMENT = domGlobals.Node.ELEMENT_NODE;
-    var TEXT = domGlobals.Node.TEXT_NODE;
-    var PROCESSING_INSTRUCTION = domGlobals.Node.PROCESSING_INSTRUCTION_NODE;
-    var ENTITY_REFERENCE = domGlobals.Node.ENTITY_REFERENCE_NODE;
-    var ENTITY = domGlobals.Node.ENTITY_NODE;
-    var NOTATION = domGlobals.Node.NOTATION_NODE;
-
-    var Global = typeof domGlobals.window !== 'undefined' ? domGlobals.window : Function('return this;')();
-
-    var type = function (element) {
-      return element.dom().nodeType;
+    const getPrototypeOf = Object.getPrototypeOf;
+    const sandHTMLElement = scope => {
+      return getOrDie('HTMLElement', scope);
     };
-    var isType$1 = function (t) {
-      return function (element) {
-        return type(element) === t;
-      };
-    };
-    var isText = isType$1(TEXT);
-
-    var inBody = function (element) {
-      var dom = isText(element) ? element.dom().parentNode : element.dom();
-      return dom !== undefined && dom !== null && dom.ownerDocument.body.contains(dom);
+    const isPrototypeOf = x => {
+      const scope = resolve('ownerDocument.defaultView', x);
+      return isObject(x) && (sandHTMLElement(scope).prototype.isPrototypeOf(x) || /^HTML\w*Element$/.test(getPrototypeOf(x).constructor.name));
     };
 
-    var rawSet = function (dom, key, value) {
+    const DOCUMENT = 9;
+    const DOCUMENT_FRAGMENT = 11;
+    const ELEMENT = 1;
+    const TEXT = 3;
+
+    const type = element => element.dom.nodeType;
+    const isType = t => element => type(element) === t;
+    const isHTMLElement = element => isElement(element) && isPrototypeOf(element.dom);
+    const isElement = isType(ELEMENT);
+    const isText = isType(TEXT);
+    const isDocument = isType(DOCUMENT);
+    const isDocumentFragment = isType(DOCUMENT_FRAGMENT);
+
+    const rawSet = (dom, key, value) => {
       if (isString(value) || isBoolean(value) || isNumber(value)) {
         dom.setAttribute(key, value + '');
       } else {
-        domGlobals.console.error('Invalid call to Attr.set. Key ', key, ':: Value ', value, ':: Element ', dom);
+        console.error('Invalid call to Attribute.set. Key ', key, ':: Value ', value, ':: Element ', dom);
         throw new Error('Attribute value was not simple');
       }
     };
-    var set = function (element, key, value) {
-      rawSet(element.dom(), key, value);
+    const set$1 = (element, key, value) => {
+      rawSet(element.dom, key, value);
     };
-    var get$1 = function (element, key) {
-      var v = element.dom().getAttribute(key);
+    const get$3 = (element, key) => {
+      const v = element.dom.getAttribute(key);
       return v === null ? undefined : v;
     };
-    var remove = function (element, key) {
-      element.dom().removeAttribute(key);
+    const remove = (element, key) => {
+      element.dom.removeAttribute(key);
     };
 
-    var internalSet = function (dom, property, value) {
+    const supports = element => element.dom.classList !== undefined;
+
+    const has = (element, clazz) => supports(element) && element.dom.classList.contains(clazz);
+
+    const contains = (str, substr, start = 0, end) => {
+      const idx = str.indexOf(substr, start);
+      if (idx !== -1) {
+        return isUndefined(end) ? true : idx + substr.length <= end;
+      } else {
+        return false;
+      }
+    };
+
+    const isSupported$1 = dom => dom.style !== undefined && isFunction(dom.style.getPropertyValue);
+
+    const fromHtml = (html, scope) => {
+      const doc = scope || document;
+      const div = doc.createElement('div');
+      div.innerHTML = html;
+      if (!div.hasChildNodes() || div.childNodes.length > 1) {
+        const message = 'HTML does not have a single root node';
+        console.error(message, html);
+        throw new Error(message);
+      }
+      return fromDom(div.childNodes[0]);
+    };
+    const fromTag = (tag, scope) => {
+      const doc = scope || document;
+      const node = doc.createElement(tag);
+      return fromDom(node);
+    };
+    const fromText = (text, scope) => {
+      const doc = scope || document;
+      const node = doc.createTextNode(text);
+      return fromDom(node);
+    };
+    const fromDom = node => {
+      if (node === null || node === undefined) {
+        throw new Error('Node cannot be null or undefined');
+      }
+      return { dom: node };
+    };
+    const fromPoint = (docElm, x, y) => Optional.from(docElm.dom.elementFromPoint(x, y)).map(fromDom);
+    const SugarElement = {
+      fromHtml,
+      fromTag,
+      fromText,
+      fromDom,
+      fromPoint
+    };
+
+    const is = (element, selector) => {
+      const dom = element.dom;
+      if (dom.nodeType !== ELEMENT) {
+        return false;
+      } else {
+        const elem = dom;
+        if (elem.matches !== undefined) {
+          return elem.matches(selector);
+        } else if (elem.msMatchesSelector !== undefined) {
+          return elem.msMatchesSelector(selector);
+        } else if (elem.webkitMatchesSelector !== undefined) {
+          return elem.webkitMatchesSelector(selector);
+        } else if (elem.mozMatchesSelector !== undefined) {
+          return elem.mozMatchesSelector(selector);
+        } else {
+          throw new Error('Browser lacks native selectors');
+        }
+      }
+    };
+    const bypassSelector = dom => dom.nodeType !== ELEMENT && dom.nodeType !== DOCUMENT && dom.nodeType !== DOCUMENT_FRAGMENT || dom.childElementCount === 0;
+    const all$1 = (selector, scope) => {
+      const base = scope === undefined ? document : scope.dom;
+      return bypassSelector(base) ? [] : map(base.querySelectorAll(selector), SugarElement.fromDom);
+    };
+
+    const eq = (e1, e2) => e1.dom === e2.dom;
+
+    const owner = element => SugarElement.fromDom(element.dom.ownerDocument);
+    const documentOrOwner = dos => isDocument(dos) ? dos : owner(dos);
+    const parent = element => Optional.from(element.dom.parentNode).map(SugarElement.fromDom);
+    const parents = (element, isRoot) => {
+      const stop = isFunction(isRoot) ? isRoot : never;
+      let dom = element.dom;
+      const ret = [];
+      while (dom.parentNode !== null && dom.parentNode !== undefined) {
+        const rawParent = dom.parentNode;
+        const p = SugarElement.fromDom(rawParent);
+        ret.push(p);
+        if (stop(p) === true) {
+          break;
+        } else {
+          dom = rawParent;
+        }
+      }
+      return ret;
+    };
+    const siblings$2 = element => {
+      const filterSelf = elements => filter$1(elements, x => !eq(element, x));
+      return parent(element).map(children).map(filterSelf).getOr([]);
+    };
+    const nextSibling = element => Optional.from(element.dom.nextSibling).map(SugarElement.fromDom);
+    const children = element => map(element.dom.childNodes, SugarElement.fromDom);
+
+    const isShadowRoot = dos => isDocumentFragment(dos) && isNonNullable(dos.dom.host);
+    const supported = isFunction(Element.prototype.attachShadow) && isFunction(Node.prototype.getRootNode);
+    const isSupported = constant(supported);
+    const getRootNode = supported ? e => SugarElement.fromDom(e.dom.getRootNode()) : documentOrOwner;
+    const getShadowRoot = e => {
+      const r = getRootNode(e);
+      return isShadowRoot(r) ? Optional.some(r) : Optional.none();
+    };
+    const getShadowHost = e => SugarElement.fromDom(e.dom.host);
+    const getOriginalEventTarget = event => {
+      if (isSupported() && isNonNullable(event.target)) {
+        const el = SugarElement.fromDom(event.target);
+        if (isElement(el) && isOpenShadowHost(el)) {
+          if (event.composed && event.composedPath) {
+            const composedPath = event.composedPath();
+            if (composedPath) {
+              return head(composedPath);
+            }
+          }
+        }
+      }
+      return Optional.from(event.target);
+    };
+    const isOpenShadowHost = element => isNonNullable(element.dom.shadowRoot);
+
+    const inBody = element => {
+      const dom = isText(element) ? element.dom.parentNode : element.dom;
+      if (dom === undefined || dom === null || dom.ownerDocument === null) {
+        return false;
+      }
+      const doc = dom.ownerDocument;
+      return getShadowRoot(SugarElement.fromDom(dom)).fold(() => doc.body.contains(dom), compose1(inBody, getShadowHost));
+    };
+    const getBody = doc => {
+      const b = doc.dom.body;
+      if (b === null || b === undefined) {
+        throw new Error('Body is not available yet');
+      }
+      return SugarElement.fromDom(b);
+    };
+
+    const internalSet = (dom, property, value) => {
       if (!isString(value)) {
-        domGlobals.console.error('Invalid call to CSS.set. Property ', property, ':: Value ', value, ':: Element ', dom);
+        console.error('Invalid call to CSS.set. Property ', property, ':: Value ', value, ':: Element ', dom);
         throw new Error('CSS value must be a string: ' + value);
       }
-      if (isSupported(dom)) {
+      if (isSupported$1(dom)) {
         dom.style.setProperty(property, value);
       }
     };
-    var setAll = function (element, css) {
-      var dom = element.dom();
-      each$1(css, function (v, k) {
+    const set = (element, property, value) => {
+      const dom = element.dom;
+      internalSet(dom, property, value);
+    };
+    const setAll = (element, css) => {
+      const dom = element.dom;
+      each(css, (v, k) => {
         internalSet(dom, k, v);
       });
     };
-    var get$2 = function (element, property) {
-      var dom = element.dom();
-      var styles = domGlobals.window.getComputedStyle(dom);
-      var r = styles.getPropertyValue(property);
-      var v = r === '' && !inBody(element) ? getUnsafeProperty(dom, property) : r;
-      return v === null ? undefined : v;
+    const get$2 = (element, property) => {
+      const dom = element.dom;
+      const styles = window.getComputedStyle(dom);
+      const r = styles.getPropertyValue(property);
+      return r === '' && !inBody(element) ? getUnsafeProperty(dom, property) : r;
     };
-    var getUnsafeProperty = function (dom, property) {
-      return isSupported(dom) ? dom.style.getPropertyValue(property) : '';
+    const getUnsafeProperty = (dom, property) => isSupported$1(dom) ? dom.style.getPropertyValue(property) : '';
+
+    const mkEvent = (target, x, y, stop, prevent, kill, raw) => ({
+      target,
+      x,
+      y,
+      stop,
+      prevent,
+      kill,
+      raw
+    });
+    const fromRawEvent = rawEvent => {
+      const target = SugarElement.fromDom(getOriginalEventTarget(rawEvent).getOr(rawEvent.target));
+      const stop = () => rawEvent.stopPropagation();
+      const prevent = () => rawEvent.preventDefault();
+      const kill = compose(prevent, stop);
+      return mkEvent(target, rawEvent.clientX, rawEvent.clientY, stop, prevent, kill, rawEvent);
+    };
+    const handle = (filter, handler) => rawEvent => {
+      if (filter(rawEvent)) {
+        handler(fromRawEvent(rawEvent));
+      }
+    };
+    const binder = (element, event, filter, handler, useCapture) => {
+      const wrapped = handle(filter, handler);
+      element.dom.addEventListener(event, wrapped, useCapture);
+      return { unbind: curry(unbind, element, event, wrapped, useCapture) };
+    };
+    const bind$2 = (element, event, filter, handler) => binder(element, event, filter, handler, false);
+    const unbind = (element, event, handler, useCapture) => {
+      element.dom.removeEventListener(event, handler, useCapture);
     };
 
-    var firstMatch = function (regexes, s) {
-      for (var i = 0; i < regexes.length; i++) {
-        var x = regexes[i];
-        if (x.test(s)) {
-          return x;
+    const filter = always;
+    const bind$1 = (element, event, handler) => bind$2(element, event, filter, handler);
+
+    const cached = f => {
+      let called = false;
+      let r;
+      return (...args) => {
+        if (!called) {
+          called = true;
+          r = f.apply(null, args);
         }
-      }
-      return undefined;
-    };
-    var find$1 = function (regexes, agent) {
-      var r = firstMatch(regexes, agent);
-      if (!r) {
-        return {
-          major: 0,
-          minor: 0
-        };
-      }
-      var group = function (i) {
-        return Number(agent.replace(r, '$' + i));
+        return r;
       };
-      return nu(group(1), group(2));
-    };
-    var detect = function (versionRegexes, agent) {
-      var cleanedAgent = String(agent).toLowerCase();
-      if (versionRegexes.length === 0) {
-        return unknown();
-      }
-      return find$1(versionRegexes, cleanedAgent);
-    };
-    var unknown = function () {
-      return nu(0, 0);
-    };
-    var nu = function (major, minor) {
-      return {
-        major: major,
-        minor: minor
-      };
-    };
-    var Version = {
-      nu: nu,
-      detect: detect,
-      unknown: unknown
     };
 
-    var edge = 'Edge';
-    var chrome = 'Chrome';
-    var ie = 'IE';
-    var opera = 'Opera';
-    var firefox = 'Firefox';
-    var safari = 'Safari';
-    var isBrowser = function (name, current) {
-      return function () {
-        return current === name;
-      };
-    };
-    var unknown$1 = function () {
-      return nu$1({
-        current: undefined,
-        version: Version.unknown()
-      });
-    };
-    var nu$1 = function (info) {
-      var current = info.current;
-      var version = info.version;
-      return {
-        current: current,
-        version: version,
-        isEdge: isBrowser(edge, current),
-        isChrome: isBrowser(chrome, current),
-        isIE: isBrowser(ie, current),
-        isOpera: isBrowser(opera, current),
-        isFirefox: isBrowser(firefox, current),
-        isSafari: isBrowser(safari, current)
-      };
-    };
-    var Browser = {
-      unknown: unknown$1,
-      nu: nu$1,
-      edge: constant(edge),
-      chrome: constant(chrome),
-      ie: constant(ie),
-      opera: constant(opera),
-      firefox: constant(firefox),
-      safari: constant(safari)
-    };
-
-    var windows = 'Windows';
-    var ios = 'iOS';
-    var android = 'Android';
-    var linux = 'Linux';
-    var osx = 'OSX';
-    var solaris = 'Solaris';
-    var freebsd = 'FreeBSD';
-    var isOS = function (name, current) {
-      return function () {
-        return current === name;
-      };
-    };
-    var unknown$2 = function () {
-      return nu$2({
-        current: undefined,
-        version: Version.unknown()
-      });
-    };
-    var nu$2 = function (info) {
-      var current = info.current;
-      var version = info.version;
-      return {
-        current: current,
-        version: version,
-        isWindows: isOS(windows, current),
-        isiOS: isOS(ios, current),
-        isAndroid: isOS(android, current),
-        isOSX: isOS(osx, current),
-        isLinux: isOS(linux, current),
-        isSolaris: isOS(solaris, current),
-        isFreeBSD: isOS(freebsd, current)
-      };
-    };
-    var OperatingSystem = {
-      unknown: unknown$2,
-      nu: nu$2,
-      windows: constant(windows),
-      ios: constant(ios),
-      android: constant(android),
-      linux: constant(linux),
-      osx: constant(osx),
-      solaris: constant(solaris),
-      freebsd: constant(freebsd)
-    };
-
-    var DeviceType = function (os, browser, userAgent, mediaMatch) {
-      var isiPad = os.isiOS() && /ipad/i.test(userAgent) === true;
-      var isiPhone = os.isiOS() && !isiPad;
-      var isMobile = os.isiOS() || os.isAndroid();
-      var isTouch = isMobile || mediaMatch('(pointer:coarse)');
-      var isTablet = isiPad || !isiPhone && isMobile && mediaMatch('(min-device-width:768px)');
-      var isPhone = isiPhone || isMobile && !isTablet;
-      var iOSwebview = browser.isSafari() && os.isiOS() && /safari/i.test(userAgent) === false;
-      var isDesktop = !isPhone && !isTablet && !iOSwebview;
+    const DeviceType = (os, browser, userAgent, mediaMatch) => {
+      const isiPad = os.isiOS() && /ipad/i.test(userAgent) === true;
+      const isiPhone = os.isiOS() && !isiPad;
+      const isMobile = os.isiOS() || os.isAndroid();
+      const isTouch = isMobile || mediaMatch('(pointer:coarse)');
+      const isTablet = isiPad || !isiPhone && isMobile && mediaMatch('(min-device-width:768px)');
+      const isPhone = isiPhone || isMobile && !isTablet;
+      const iOSwebview = browser.isSafari() && os.isiOS() && /safari/i.test(userAgent) === false;
+      const isDesktop = !isPhone && !isTablet && !iOSwebview;
       return {
         isiPad: constant(isiPad),
         isiPhone: constant(isiPhone),
@@ -541,56 +605,110 @@
       };
     };
 
-    var detect$1 = function (candidates, userAgent) {
-      var agent = String(userAgent).toLowerCase();
-      return find(candidates, function (candidate) {
+    const firstMatch = (regexes, s) => {
+      for (let i = 0; i < regexes.length; i++) {
+        const x = regexes[i];
+        if (x.test(s)) {
+          return x;
+        }
+      }
+      return undefined;
+    };
+    const find = (regexes, agent) => {
+      const r = firstMatch(regexes, agent);
+      if (!r) {
+        return {
+          major: 0,
+          minor: 0
+        };
+      }
+      const group = i => {
+        return Number(agent.replace(r, '$' + i));
+      };
+      return nu$2(group(1), group(2));
+    };
+    const detect$3 = (versionRegexes, agent) => {
+      const cleanedAgent = String(agent).toLowerCase();
+      if (versionRegexes.length === 0) {
+        return unknown$2();
+      }
+      return find(versionRegexes, cleanedAgent);
+    };
+    const unknown$2 = () => {
+      return nu$2(0, 0);
+    };
+    const nu$2 = (major, minor) => {
+      return {
+        major,
+        minor
+      };
+    };
+    const Version = {
+      nu: nu$2,
+      detect: detect$3,
+      unknown: unknown$2
+    };
+
+    const detectBrowser$1 = (browsers, userAgentData) => {
+      return findMap(userAgentData.brands, uaBrand => {
+        const lcBrand = uaBrand.brand.toLowerCase();
+        return find$1(browsers, browser => {
+          var _a;
+          return lcBrand === ((_a = browser.brand) === null || _a === void 0 ? void 0 : _a.toLowerCase());
+        }).map(info => ({
+          current: info.name,
+          version: Version.nu(parseInt(uaBrand.version, 10), 0)
+        }));
+      });
+    };
+
+    const detect$2 = (candidates, userAgent) => {
+      const agent = String(userAgent).toLowerCase();
+      return find$1(candidates, candidate => {
         return candidate.search(agent);
       });
     };
-    var detectBrowser = function (browsers, userAgent) {
-      return detect$1(browsers, userAgent).map(function (browser) {
-        var version = Version.detect(browser.versionRegexes, userAgent);
+    const detectBrowser = (browsers, userAgent) => {
+      return detect$2(browsers, userAgent).map(browser => {
+        const version = Version.detect(browser.versionRegexes, userAgent);
         return {
           current: browser.name,
-          version: version
+          version
         };
       });
     };
-    var detectOs = function (oses, userAgent) {
-      return detect$1(oses, userAgent).map(function (os) {
-        var version = Version.detect(os.versionRegexes, userAgent);
+    const detectOs = (oses, userAgent) => {
+      return detect$2(oses, userAgent).map(os => {
+        const version = Version.detect(os.versionRegexes, userAgent);
         return {
           current: os.name,
-          version: version
+          version
         };
       });
     };
-    var UaString = {
-      detectBrowser: detectBrowser,
-      detectOs: detectOs
-    };
 
-    var normalVersionRegex = /.*?version\/\ ?([0-9]+)\.([0-9]+).*/;
-    var checkContains = function (target) {
-      return function (uastring) {
+    const normalVersionRegex = /.*?version\/\ ?([0-9]+)\.([0-9]+).*/;
+    const checkContains = target => {
+      return uastring => {
         return contains(uastring, target);
       };
     };
-    var browsers = [
+    const browsers = [
       {
         name: 'Edge',
         versionRegexes: [/.*?edge\/ ?([0-9]+)\.([0-9]+)$/],
-        search: function (uastring) {
+        search: uastring => {
           return contains(uastring, 'edge/') && contains(uastring, 'chrome') && contains(uastring, 'safari') && contains(uastring, 'applewebkit');
         }
       },
       {
-        name: 'Chrome',
+        name: 'Chromium',
+        brand: 'Chromium',
         versionRegexes: [
           /.*?chrome\/([0-9]+)\.([0-9]+).*/,
           normalVersionRegex
         ],
-        search: function (uastring) {
+        search: uastring => {
           return contains(uastring, 'chrome') && !contains(uastring, 'chromeframe');
         }
       },
@@ -600,7 +718,7 @@
           /.*?msie\ ?([0-9]+)\.([0-9]+).*/,
           /.*?rv:([0-9]+)\.([0-9]+).*/
         ],
-        search: function (uastring) {
+        search: uastring => {
           return contains(uastring, 'msie') || contains(uastring, 'trident');
         }
       },
@@ -623,12 +741,12 @@
           normalVersionRegex,
           /.*?cpu os ([0-9]+)_([0-9]+).*/
         ],
-        search: function (uastring) {
+        search: uastring => {
           return (contains(uastring, 'safari') || contains(uastring, 'mobile/')) && contains(uastring, 'applewebkit');
         }
       }
     ];
-    var oses = [
+    const oses = [
       {
         name: 'Windows',
         search: checkContains('win'),
@@ -636,7 +754,7 @@
       },
       {
         name: 'iOS',
-        search: function (uastring) {
+        search: uastring => {
           return contains(uastring, 'iphone') || contains(uastring, 'ipad');
         },
         versionRegexes: [
@@ -651,9 +769,9 @@
         versionRegexes: [/.*?android\ ?([0-9]+)\.([0-9]+).*/]
       },
       {
-        name: 'OSX',
-        search: checkContains('os x'),
-        versionRegexes: [/.*?os\ x\ ?([0-9]+)_([0-9]+).*/]
+        name: 'macOS',
+        search: checkContains('mac os x'),
+        versionRegexes: [/.*?mac\ os\ x\ ?([0-9]+)_([0-9]+).*/]
       },
       {
         name: 'Linux',
@@ -669,438 +787,464 @@
         name: 'FreeBSD',
         search: checkContains('freebsd'),
         versionRegexes: []
+      },
+      {
+        name: 'ChromeOS',
+        search: checkContains('cros'),
+        versionRegexes: [/.*?chrome\/([0-9]+)\.([0-9]+).*/]
       }
     ];
-    var PlatformInfo = {
+    const PlatformInfo = {
       browsers: constant(browsers),
       oses: constant(oses)
     };
 
-    var detect$2 = function (userAgent, mediaMatch) {
-      var browsers = PlatformInfo.browsers();
-      var oses = PlatformInfo.oses();
-      var browser = UaString.detectBrowser(browsers, userAgent).fold(Browser.unknown, Browser.nu);
-      var os = UaString.detectOs(oses, userAgent).fold(OperatingSystem.unknown, OperatingSystem.nu);
-      var deviceType = DeviceType(os, browser, userAgent, mediaMatch);
+    const edge = 'Edge';
+    const chromium = 'Chromium';
+    const ie = 'IE';
+    const opera = 'Opera';
+    const firefox = 'Firefox';
+    const safari = 'Safari';
+    const unknown$1 = () => {
+      return nu$1({
+        current: undefined,
+        version: Version.unknown()
+      });
+    };
+    const nu$1 = info => {
+      const current = info.current;
+      const version = info.version;
+      const isBrowser = name => () => current === name;
       return {
-        browser: browser,
-        os: os,
-        deviceType: deviceType
+        current,
+        version,
+        isEdge: isBrowser(edge),
+        isChromium: isBrowser(chromium),
+        isIE: isBrowser(ie),
+        isOpera: isBrowser(opera),
+        isFirefox: isBrowser(firefox),
+        isSafari: isBrowser(safari)
       };
     };
-    var PlatformDetection = { detect: detect$2 };
-
-    var mediaMatch = function (query) {
-      return domGlobals.window.matchMedia(query).matches;
+    const Browser = {
+      unknown: unknown$1,
+      nu: nu$1,
+      edge: constant(edge),
+      chromium: constant(chromium),
+      ie: constant(ie),
+      opera: constant(opera),
+      firefox: constant(firefox),
+      safari: constant(safari)
     };
-    var platform = Cell(PlatformDetection.detect(domGlobals.navigator.userAgent, mediaMatch));
-    var detect$3 = function () {
-      return platform.get();
-    };
 
-    var Immutable = function () {
-      var fields = [];
-      for (var _i = 0; _i < arguments.length; _i++) {
-        fields[_i] = arguments[_i];
-      }
-      return function () {
-        var values = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-          values[_i] = arguments[_i];
-        }
-        if (fields.length !== values.length) {
-          throw new Error('Wrong number of arguments to struct. Expected "[' + fields.length + ']", got ' + values.length + ' arguments');
-        }
-        var struct = {};
-        each(fields, function (name, i) {
-          struct[name] = constant(values[i]);
-        });
-        return struct;
+    const windows = 'Windows';
+    const ios = 'iOS';
+    const android = 'Android';
+    const linux = 'Linux';
+    const macos = 'macOS';
+    const solaris = 'Solaris';
+    const freebsd = 'FreeBSD';
+    const chromeos = 'ChromeOS';
+    const unknown = () => {
+      return nu({
+        current: undefined,
+        version: Version.unknown()
+      });
+    };
+    const nu = info => {
+      const current = info.current;
+      const version = info.version;
+      const isOS = name => () => current === name;
+      return {
+        current,
+        version,
+        isWindows: isOS(windows),
+        isiOS: isOS(ios),
+        isAndroid: isOS(android),
+        isMacOS: isOS(macos),
+        isLinux: isOS(linux),
+        isSolaris: isOS(solaris),
+        isFreeBSD: isOS(freebsd),
+        isChromeOS: isOS(chromeos)
       };
     };
-
-    var compareDocumentPosition = function (a, b, match) {
-      return (a.compareDocumentPosition(b) & match) !== 0;
-    };
-    var documentPositionPreceding = function (a, b) {
-      return compareDocumentPosition(a, b, domGlobals.Node.DOCUMENT_POSITION_PRECEDING);
-    };
-    var documentPositionContainedBy = function (a, b) {
-      return compareDocumentPosition(a, b, domGlobals.Node.DOCUMENT_POSITION_CONTAINED_BY);
-    };
-    var Node = {
-      documentPositionPreceding: documentPositionPreceding,
-      documentPositionContainedBy: documentPositionContainedBy
+    const OperatingSystem = {
+      unknown,
+      nu,
+      windows: constant(windows),
+      ios: constant(ios),
+      android: constant(android),
+      linux: constant(linux),
+      macos: constant(macos),
+      solaris: constant(solaris),
+      freebsd: constant(freebsd),
+      chromeos: constant(chromeos)
     };
 
-    var ELEMENT$1 = ELEMENT;
-    var DOCUMENT$1 = DOCUMENT;
-    var is = function (element, selector) {
-      var dom = element.dom();
-      if (dom.nodeType !== ELEMENT$1) {
-        return false;
+    const detect$1 = (userAgent, userAgentDataOpt, mediaMatch) => {
+      const browsers = PlatformInfo.browsers();
+      const oses = PlatformInfo.oses();
+      const browser = userAgentDataOpt.bind(userAgentData => detectBrowser$1(browsers, userAgentData)).orThunk(() => detectBrowser(browsers, userAgent)).fold(Browser.unknown, Browser.nu);
+      const os = detectOs(oses, userAgent).fold(OperatingSystem.unknown, OperatingSystem.nu);
+      const deviceType = DeviceType(os, browser, userAgent, mediaMatch);
+      return {
+        browser,
+        os,
+        deviceType
+      };
+    };
+    const PlatformDetection = { detect: detect$1 };
+
+    const mediaMatch = query => window.matchMedia(query).matches;
+    let platform = cached(() => PlatformDetection.detect(navigator.userAgent, Optional.from(navigator.userAgentData), mediaMatch));
+    const detect = () => platform();
+
+    const r = (left, top) => {
+      const translate = (x, y) => r(left + x, top + y);
+      return {
+        left,
+        top,
+        translate
+      };
+    };
+    const SugarPosition = r;
+
+    const get$1 = _DOC => {
+      const doc = _DOC !== undefined ? _DOC.dom : document;
+      const x = doc.body.scrollLeft || doc.documentElement.scrollLeft;
+      const y = doc.body.scrollTop || doc.documentElement.scrollTop;
+      return SugarPosition(x, y);
+    };
+
+    const get = _win => {
+      const win = _win === undefined ? window : _win;
+      if (detect().browser.isFirefox()) {
+        return Optional.none();
       } else {
-        var elem = dom;
-        if (elem.matches !== undefined) {
-          return elem.matches(selector);
-        } else if (elem.msMatchesSelector !== undefined) {
-          return elem.msMatchesSelector(selector);
-        } else if (elem.webkitMatchesSelector !== undefined) {
-          return elem.webkitMatchesSelector(selector);
-        } else if (elem.mozMatchesSelector !== undefined) {
-          return elem.mozMatchesSelector(selector);
-        } else {
-          throw new Error('Browser lacks native selectors');
-        }
+        return Optional.from(win.visualViewport);
       }
     };
-    var bypassSelector = function (dom) {
-      return dom.nodeType !== ELEMENT$1 && dom.nodeType !== DOCUMENT$1 || dom.childElementCount === 0;
+    const bounds = (x, y, width, height) => ({
+      x,
+      y,
+      width,
+      height,
+      right: x + width,
+      bottom: y + height
+    });
+    const getBounds = _win => {
+      const win = _win === undefined ? window : _win;
+      const doc = win.document;
+      const scroll = get$1(SugarElement.fromDom(doc));
+      return get(win).fold(() => {
+        const html = win.document.documentElement;
+        const width = html.clientWidth;
+        const height = html.clientHeight;
+        return bounds(scroll.left, scroll.top, width, height);
+      }, visualViewport => bounds(Math.max(visualViewport.pageLeft, scroll.left), Math.max(visualViewport.pageTop, scroll.top), visualViewport.width, visualViewport.height));
     };
-    var all = function (selector, scope) {
-      var base = scope === undefined ? domGlobals.document : scope.dom();
-      return bypassSelector(base) ? [] : map(base.querySelectorAll(selector), Element.fromDom);
-    };
-
-    var eq = function (e1, e2) {
-      return e1.dom() === e2.dom();
-    };
-    var regularContains = function (e1, e2) {
-      var d1 = e1.dom();
-      var d2 = e2.dom();
-      return d1 === d2 ? false : d1.contains(d2);
-    };
-    var ieContains = function (e1, e2) {
-      return Node.documentPositionContainedBy(e1.dom(), e2.dom());
-    };
-    var browser = detect$3().browser;
-    var contains$1 = browser.isIE() ? ieContains : regularContains;
-
-    var parent = function (element) {
-      return Option.from(element.dom().parentNode).map(Element.fromDom);
-    };
-    var parents = function (element, isRoot) {
-      var stop = isFunction(isRoot) ? isRoot : never;
-      var dom = element.dom();
-      var ret = [];
-      while (dom.parentNode !== null && dom.parentNode !== undefined) {
-        var rawParent = dom.parentNode;
-        var p = Element.fromDom(rawParent);
-        ret.push(p);
-        if (stop(p) === true) {
-          break;
-        } else {
-          dom = rawParent;
-        }
-      }
-      return ret;
-    };
-    var siblings = function (element) {
-      var filterSelf = function (elements) {
-        return filter(elements, function (x) {
-          return !eq(element, x);
-        });
-      };
-      return parent(element).map(children).map(filterSelf).getOr([]);
-    };
-    var children = function (element) {
-      return map(element.dom().childNodes, Element.fromDom);
-    };
-    var spot = Immutable('element', 'offset');
-
-    var r = function (left, top) {
-      var translate = function (x, y) {
-        return r(left + x, top + y);
-      };
-      return {
-        left: constant(left),
-        top: constant(top),
-        translate: translate
-      };
-    };
-    var Position = r;
-
-    var isSafari = detect$3().browser.isSafari();
-    var get$3 = function (_DOC) {
-      var doc = _DOC !== undefined ? _DOC.dom() : domGlobals.document;
-      var x = doc.body.scrollLeft || doc.documentElement.scrollLeft;
-      var y = doc.body.scrollTop || doc.documentElement.scrollTop;
-      return Position(x, y);
-    };
-
-    var bounds = function (x, y, width, height) {
-      return {
-        x: constant(x),
-        y: constant(y),
-        width: constant(width),
-        height: constant(height),
-        right: constant(x + width),
-        bottom: constant(y + height)
-      };
-    };
-    var getBounds = function (_win) {
-      var win = _win === undefined ? domGlobals.window : _win;
-      var doc = win.document;
-      var scroll = get$3(Element.fromDom(doc));
-      var visualViewport = win['visualViewport'];
-      if (visualViewport !== undefined) {
-        return bounds(Math.max(visualViewport.pageLeft, scroll.left()), Math.max(visualViewport.pageTop, scroll.top()), visualViewport.width, visualViewport.height);
-      } else {
-        var html = doc.documentElement;
-        var width = html.clientWidth;
-        var height = html.clientHeight;
-        return bounds(scroll.left(), scroll.top(), width, height);
-      }
-    };
-
-    var fireFullscreenStateChanged = function (editor, state) {
-      editor.fire('FullscreenStateChanged', { state: state });
-    };
-    var Events = { fireFullscreenStateChanged: fireFullscreenStateChanged };
+    const bind = (name, callback, _win) => get(_win).map(visualViewport => {
+      const handler = e => callback(fromRawEvent(e));
+      visualViewport.addEventListener(name, handler);
+      return { unbind: () => visualViewport.removeEventListener(name, handler) };
+    }).getOrThunk(() => ({ unbind: noop }));
 
     var global$1 = tinymce.util.Tools.resolve('tinymce.dom.DOMUtils');
 
-    var global$2 = tinymce.util.Tools.resolve('tinymce.Env');
+    var global = tinymce.util.Tools.resolve('tinymce.Env');
 
-    var global$3 = tinymce.util.Tools.resolve('tinymce.util.Delay');
-
-    var ancestors = function (scope, predicate, isRoot) {
-      return filter(parents(scope, isRoot), predicate);
-    };
-    var siblings$1 = function (scope, predicate) {
-      return filter(siblings(scope), predicate);
+    const fireFullscreenStateChanged = (editor, state) => {
+      editor.dispatch('FullscreenStateChanged', { state });
+      editor.dispatch('ResizeEditor');
     };
 
-    var all$1 = function (selector) {
-      return all(selector);
-    };
-    var ancestors$1 = function (scope, selector, isRoot) {
-      return ancestors(scope, function (e) {
-        return is(e, selector);
-      }, isRoot);
-    };
-    var siblings$2 = function (scope, selector) {
-      return siblings$1(scope, function (e) {
-        return is(e, selector);
+    const option = name => editor => editor.options.get(name);
+    const register$2 = editor => {
+      const registerOption = editor.options.register;
+      registerOption('fullscreen_native', {
+        processor: 'boolean',
+        default: false
       });
     };
+    const getFullscreenNative = option('fullscreen_native');
 
-    var attr = 'data-ephox-mobile-fullscreen-style';
-    var siblingStyles = 'display:none!important;';
-    var ancestorPosition = 'position:absolute!important;';
-    var ancestorStyles = 'top:0!important;left:0!important;margin:0!important;padding:0!important;width:100%!important;height:100%!important;overflow:visible!important;';
-    var bgFallback = 'background-color:rgb(255,255,255)!important;';
-    var isAndroid = global$2.os.isAndroid();
-    var matchColor = function (editorBody) {
-      var color = get$2(editorBody, 'background-color');
+    const getFullscreenRoot = editor => {
+      const elem = SugarElement.fromDom(editor.getElement());
+      return getShadowRoot(elem).map(getShadowHost).getOrThunk(() => getBody(owner(elem)));
+    };
+    const getFullscreenElement = root => {
+      if (root.fullscreenElement !== undefined) {
+        return root.fullscreenElement;
+      } else if (root.msFullscreenElement !== undefined) {
+        return root.msFullscreenElement;
+      } else if (root.webkitFullscreenElement !== undefined) {
+        return root.webkitFullscreenElement;
+      } else {
+        return null;
+      }
+    };
+    const getFullscreenchangeEventName = () => {
+      if (document.fullscreenElement !== undefined) {
+        return 'fullscreenchange';
+      } else if (document.msFullscreenElement !== undefined) {
+        return 'MSFullscreenChange';
+      } else if (document.webkitFullscreenElement !== undefined) {
+        return 'webkitfullscreenchange';
+      } else {
+        return 'fullscreenchange';
+      }
+    };
+    const requestFullscreen = sugarElem => {
+      const elem = sugarElem.dom;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+      } else if (elem.webkitRequestFullScreen) {
+        elem.webkitRequestFullScreen();
+      }
+    };
+    const exitFullscreen = sugarDoc => {
+      const doc = sugarDoc.dom;
+      if (doc.exitFullscreen) {
+        doc.exitFullscreen();
+      } else if (doc.msExitFullscreen) {
+        doc.msExitFullscreen();
+      } else if (doc.webkitCancelFullScreen) {
+        doc.webkitCancelFullScreen();
+      }
+    };
+    const isFullscreenElement = elem => elem.dom === getFullscreenElement(owner(elem).dom);
+
+    const ancestors$1 = (scope, predicate, isRoot) => filter$1(parents(scope, isRoot), predicate);
+    const siblings$1 = (scope, predicate) => filter$1(siblings$2(scope), predicate);
+
+    const all = selector => all$1(selector);
+    const ancestors = (scope, selector, isRoot) => ancestors$1(scope, e => is(e, selector), isRoot);
+    const siblings = (scope, selector) => siblings$1(scope, e => is(e, selector));
+
+    const attr = 'data-ephox-mobile-fullscreen-style';
+    const siblingStyles = 'display:none!important;';
+    const ancestorPosition = 'position:absolute!important;';
+    const ancestorStyles = 'top:0!important;left:0!important;margin:0!important;padding:0!important;width:100%!important;height:100%!important;overflow:visible!important;';
+    const bgFallback = 'background-color:rgb(255,255,255)!important;';
+    const isAndroid = global.os.isAndroid();
+    const matchColor = editorBody => {
+      const color = get$2(editorBody, 'background-color');
       return color !== undefined && color !== '' ? 'background-color:' + color + '!important' : bgFallback;
     };
-    var clobberStyles = function (container, editorBody) {
-      var gatherSibilings = function (element) {
-        var siblings = siblings$2(element, '*:not(.tox-silver-sink)');
-        return siblings;
+    const clobberStyles = (dom, container, editorBody) => {
+      const gatherSiblings = element => {
+        return siblings(element, '*:not(.tox-silver-sink)');
       };
-      var clobber = function (clobberStyle) {
-        return function (element) {
-          var styles = get$1(element, 'style');
-          var backup = styles === undefined ? 'no-styles' : styles.trim();
-          if (backup === clobberStyle) {
-            return;
-          } else {
-            set(element, attr, backup);
-            set(element, 'style', clobberStyle);
-          }
-        };
+      const clobber = clobberStyle => element => {
+        const styles = get$3(element, 'style');
+        const backup = styles === undefined ? 'no-styles' : styles.trim();
+        if (backup === clobberStyle) {
+          return;
+        } else {
+          set$1(element, attr, backup);
+          setAll(element, dom.parseStyle(clobberStyle));
+        }
       };
-      var ancestors = ancestors$1(container, '*');
-      var siblings = bind(ancestors, gatherSibilings);
-      var bgColor = matchColor(editorBody);
-      each(siblings, clobber(siblingStyles));
-      each(ancestors, clobber(ancestorPosition + ancestorStyles + bgColor));
-      var containerStyles = isAndroid === true ? '' : ancestorPosition;
+      const ancestors$1 = ancestors(container, '*');
+      const siblings$1 = bind$3(ancestors$1, gatherSiblings);
+      const bgColor = matchColor(editorBody);
+      each$1(siblings$1, clobber(siblingStyles));
+      each$1(ancestors$1, clobber(ancestorPosition + ancestorStyles + bgColor));
+      const containerStyles = isAndroid === true ? '' : ancestorPosition;
       clobber(containerStyles + ancestorStyles + bgColor)(container);
     };
-    var restoreStyles = function () {
-      var clobberedEls = all$1('[' + attr + ']');
-      each(clobberedEls, function (element) {
-        var restore = get$1(element, attr);
-        if (restore !== 'no-styles') {
-          set(element, 'style', restore);
+    const restoreStyles = dom => {
+      const clobberedEls = all('[' + attr + ']');
+      each$1(clobberedEls, element => {
+        const restore = get$3(element, attr);
+        if (restore && restore !== 'no-styles') {
+          setAll(element, dom.parseStyle(restore));
         } else {
           remove(element, 'style');
         }
         remove(element, attr);
       });
     };
-    var Thor = {
-      clobberStyles: clobberStyles,
-      restoreStyles: restoreStyles
-    };
 
-    var DOM = global$1.DOM;
-    var getScrollPos = function () {
-      var vp = getBounds(domGlobals.window);
-      return {
-        x: vp.x(),
-        y: vp.y()
-      };
-    };
-    var setScrollPos = function (pos) {
-      domGlobals.window.scrollTo(pos.x, pos.y);
-    };
-    var visualViewport = domGlobals.window['visualViewport'];
-    var viewportUpdate = visualViewport === undefined ? {
+    const DOM = global$1.DOM;
+    const getScrollPos = () => getBounds(window);
+    const setScrollPos = pos => window.scrollTo(pos.x, pos.y);
+    const viewportUpdate = get().fold(() => ({
       bind: noop,
       unbind: noop
-    } : function () {
-      var editorContainer = value();
-      var refreshScroll = function () {
-        domGlobals.document.body.scrollTop = 0;
-        domGlobals.document.documentElement.scrollTop = 0;
+    }), visualViewport => {
+      const editorContainer = value();
+      const resizeBinder = unbindable();
+      const scrollBinder = unbindable();
+      const refreshScroll = () => {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
       };
-      var refreshVisualViewport = function () {
-        domGlobals.window.requestAnimationFrame(function () {
-          editorContainer.on(function (container) {
-            return setAll(container, {
-              top: visualViewport.offsetTop + 'px',
-              left: visualViewport.offsetLeft + 'px',
-              height: visualViewport.height + 'px',
-              width: visualViewport.width + 'px'
-            });
-          });
+      const refreshVisualViewport = () => {
+        window.requestAnimationFrame(() => {
+          editorContainer.on(container => setAll(container, {
+            top: visualViewport.offsetTop + 'px',
+            left: visualViewport.offsetLeft + 'px',
+            height: visualViewport.height + 'px',
+            width: visualViewport.width + 'px'
+          }));
         });
       };
-      var update = global$3.throttle(function () {
+      const update = first(() => {
         refreshScroll();
         refreshVisualViewport();
       }, 50);
-      var bind = function (element) {
+      const bind$1 = element => {
         editorContainer.set(element);
-        update();
-        visualViewport.addEventListener('resize', update);
-        visualViewport.addEventListener('scroll', update);
+        update.throttle();
+        resizeBinder.set(bind('resize', update.throttle));
+        scrollBinder.set(bind('scroll', update.throttle));
       };
-      var unbind = function () {
-        editorContainer.on(function () {
-          visualViewport.removeEventListener('scroll', update);
-          visualViewport.removeEventListener('resize', update);
+      const unbind = () => {
+        editorContainer.on(() => {
+          resizeBinder.clear();
+          scrollBinder.clear();
         });
         editorContainer.clear();
       };
       return {
-        bind: bind,
-        unbind: unbind
+        bind: bind$1,
+        unbind
       };
-    }();
-    var toggleFullscreen = function (editor, fullscreenState) {
-      var body = domGlobals.document.body;
-      var documentElement = domGlobals.document.documentElement;
-      var editorContainerStyle;
-      var editorContainer, iframe, iframeStyle;
-      editorContainer = editor.getContainer();
-      var editorContainerS = Element.fromDom(editorContainer);
-      var fullscreenInfo = fullscreenState.get();
-      var editorBody = Element.fromDom(editor.getBody());
-      var isTouch = global$2.deviceType.isTouch();
-      editorContainerStyle = editorContainer.style;
-      iframe = editor.getContentAreaContainer().firstChild;
-      iframeStyle = iframe.style;
+    });
+    const toggleFullscreen = (editor, fullscreenState) => {
+      const body = document.body;
+      const documentElement = document.documentElement;
+      const editorContainer = editor.getContainer();
+      const editorContainerS = SugarElement.fromDom(editorContainer);
+      const sinkContainerS = nextSibling(editorContainerS).filter(elm => isHTMLElement(elm) && has(elm, 'tox-silver-sink'));
+      const fullscreenRoot = getFullscreenRoot(editor);
+      const fullscreenInfo = fullscreenState.get();
+      const editorBody = SugarElement.fromDom(editor.getBody());
+      const isTouch = global.deviceType.isTouch();
+      const editorContainerStyle = editorContainer.style;
+      const iframe = editor.iframeElement;
+      const iframeStyle = iframe === null || iframe === void 0 ? void 0 : iframe.style;
+      const handleClasses = handler => {
+        handler(body, 'tox-fullscreen');
+        handler(documentElement, 'tox-fullscreen');
+        handler(editorContainer, 'tox-fullscreen');
+        getShadowRoot(editorContainerS).map(root => getShadowHost(root).dom).each(host => {
+          handler(host, 'tox-fullscreen');
+          handler(host, 'tox-shadowhost');
+        });
+      };
+      const cleanup = () => {
+        if (isTouch) {
+          restoreStyles(editor.dom);
+        }
+        handleClasses(DOM.removeClass);
+        viewportUpdate.unbind();
+        Optional.from(fullscreenState.get()).each(info => info.fullscreenChangeHandler.unbind());
+      };
       if (!fullscreenInfo) {
-        var newFullScreenInfo = {
+        const fullscreenChangeHandler = bind$1(owner(fullscreenRoot), getFullscreenchangeEventName(), _evt => {
+          if (getFullscreenNative(editor)) {
+            if (!isFullscreenElement(fullscreenRoot) && fullscreenState.get() !== null) {
+              toggleFullscreen(editor, fullscreenState);
+            }
+          }
+        });
+        const newFullScreenInfo = {
           scrollPos: getScrollPos(),
           containerWidth: editorContainerStyle.width,
           containerHeight: editorContainerStyle.height,
           containerTop: editorContainerStyle.top,
           containerLeft: editorContainerStyle.left,
           iframeWidth: iframeStyle.width,
-          iframeHeight: iframeStyle.height
+          iframeHeight: iframeStyle.height,
+          fullscreenChangeHandler,
+          sinkCssPosition: sinkContainerS.map(elm => get$2(elm, 'position'))
         };
         if (isTouch) {
-          Thor.clobberStyles(editorContainerS, editorBody);
+          clobberStyles(editor.dom, editorContainerS, editorBody);
         }
         iframeStyle.width = iframeStyle.height = '100%';
         editorContainerStyle.width = editorContainerStyle.height = '';
-        DOM.addClass(body, 'tox-fullscreen');
-        DOM.addClass(documentElement, 'tox-fullscreen');
-        DOM.addClass(editorContainer, 'tox-fullscreen');
+        handleClasses(DOM.addClass);
+        sinkContainerS.each(elm => {
+          set(elm, 'position', 'fixed');
+        });
         viewportUpdate.bind(editorContainerS);
-        editor.on('remove', viewportUpdate.unbind);
+        editor.on('remove', cleanup);
         fullscreenState.set(newFullScreenInfo);
-        Events.fireFullscreenStateChanged(editor, true);
+        if (getFullscreenNative(editor)) {
+          requestFullscreen(fullscreenRoot);
+        }
+        fireFullscreenStateChanged(editor, true);
       } else {
+        fullscreenInfo.fullscreenChangeHandler.unbind();
+        if (getFullscreenNative(editor) && isFullscreenElement(fullscreenRoot)) {
+          exitFullscreen(owner(fullscreenRoot));
+        }
         iframeStyle.width = fullscreenInfo.iframeWidth;
         iframeStyle.height = fullscreenInfo.iframeHeight;
         editorContainerStyle.width = fullscreenInfo.containerWidth;
         editorContainerStyle.height = fullscreenInfo.containerHeight;
         editorContainerStyle.top = fullscreenInfo.containerTop;
         editorContainerStyle.left = fullscreenInfo.containerLeft;
-        if (isTouch) {
-          Thor.restoreStyles();
-        }
-        DOM.removeClass(body, 'tox-fullscreen');
-        DOM.removeClass(documentElement, 'tox-fullscreen');
-        DOM.removeClass(editorContainer, 'tox-fullscreen');
+        lift2(sinkContainerS, fullscreenInfo.sinkCssPosition, (elm, val) => {
+          set(elm, 'position', val);
+        });
+        cleanup();
         setScrollPos(fullscreenInfo.scrollPos);
         fullscreenState.set(null);
-        Events.fireFullscreenStateChanged(editor, false);
-        viewportUpdate.unbind();
-        editor.off('remove', viewportUpdate.unbind);
+        fireFullscreenStateChanged(editor, false);
+        editor.off('remove', cleanup);
       }
     };
-    var Actions = { toggleFullscreen: toggleFullscreen };
 
-    var register = function (editor, fullscreenState) {
-      editor.addCommand('mceFullScreen', function () {
-        Actions.toggleFullscreen(editor, fullscreenState);
+    const register$1 = (editor, fullscreenState) => {
+      editor.addCommand('mceFullScreen', () => {
+        toggleFullscreen(editor, fullscreenState);
       });
     };
-    var Commands = { register: register };
 
-    var makeSetupHandler = function (editor, fullscreenState) {
-      return function (api) {
-        api.setActive(fullscreenState.get() !== null);
-        var editorEventCallback = function (e) {
-          return api.setActive(e.state);
-        };
-        editor.on('FullscreenStateChanged', editorEventCallback);
-        return function () {
-          return editor.off('FullscreenStateChanged', editorEventCallback);
-        };
-      };
+    const makeSetupHandler = (editor, fullscreenState) => api => {
+      api.setActive(fullscreenState.get() !== null);
+      const editorEventCallback = e => api.setActive(e.state);
+      editor.on('FullscreenStateChanged', editorEventCallback);
+      return () => editor.off('FullscreenStateChanged', editorEventCallback);
     };
-    var register$1 = function (editor, fullscreenState) {
+    const register = (editor, fullscreenState) => {
+      const onAction = () => editor.execCommand('mceFullScreen');
       editor.ui.registry.addToggleMenuItem('fullscreen', {
         text: 'Fullscreen',
+        icon: 'fullscreen',
         shortcut: 'Meta+Shift+F',
-        onAction: function () {
-          return editor.execCommand('mceFullScreen');
-        },
+        onAction,
         onSetup: makeSetupHandler(editor, fullscreenState)
       });
       editor.ui.registry.addToggleButton('fullscreen', {
         tooltip: 'Fullscreen',
         icon: 'fullscreen',
-        onAction: function () {
-          return editor.execCommand('mceFullScreen');
-        },
-        onSetup: makeSetupHandler(editor, fullscreenState)
+        onAction,
+        onSetup: makeSetupHandler(editor, fullscreenState),
+        shortcut: 'Meta+Shift+F'
       });
     };
-    var Buttons = { register: register$1 };
 
-    function Plugin () {
-      global.add('fullscreen', function (editor) {
-        var fullscreenState = Cell(null);
-        if (editor.settings.inline) {
-          return Api.get(fullscreenState);
+    var Plugin = () => {
+      global$2.add('fullscreen', editor => {
+        const fullscreenState = Cell(null);
+        if (editor.inline) {
+          return get$5(fullscreenState);
         }
-        Commands.register(editor, fullscreenState);
-        Buttons.register(editor, fullscreenState);
+        register$2(editor);
+        register$1(editor, fullscreenState);
+        register(editor, fullscreenState);
         editor.addShortcut('Meta+Shift+F', '', 'mceFullScreen');
-        return Api.get(fullscreenState);
+        return get$5(fullscreenState);
       });
-    }
+    };
 
     Plugin();
 
-}(window));
+})();

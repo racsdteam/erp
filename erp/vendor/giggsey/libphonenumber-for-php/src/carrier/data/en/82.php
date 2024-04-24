@@ -11,6 +11,7 @@
  */
 
 return array (
+  82100 => 'LG U+',
   821020 => 'SKTellink',
   821021 => 'SKTellink',
   821022 => 'LG U+',
@@ -44,7 +45,12 @@ return array (
   821056 => 'LG U+',
   821057 => 'LG U+',
   821058 => 'LG U+',
-  821059 => 'SKTellink',
+  8210590 => 'SKTellink',
+  8210591 => 'SKTellink',
+  8210592 => 'SKTellink',
+  8210593 => 'SKTellink',
+  8210594 => 'SKTellink',
+  8210595 => 'SKTellink',
   821062 => 'SKTellink',
   821063 => 'SKTellink',
   821064 => 'SKTellink',

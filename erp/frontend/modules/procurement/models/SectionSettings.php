@@ -56,8 +56,6 @@ class SectionSettings extends \yii\db\ActiveRecord
             'name' => 'Name',
             'code' => 'Code',
             'envelope_code' => 'Envelope Code',
-            'procurement_categories_code' => 'Procurement Categories Code',
-            'procurement_methods_code' => 'Procurement Methods Code',
             'user_id' => 'User ID',
             'timestamp' => 'Timestamp',
         ];

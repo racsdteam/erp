@@ -9,7 +9,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-
+use yii\helpers\Json;
+use yii\web\UploadedFile;
 /**
  * TenderStageSettingsController implements the CRUD actions for TenderStageSettings model.
  */
@@ -83,19 +84,52 @@ class TenderStageSettingsController extends Controller
         $model = new TenderStageSettings();
 
        if(Yii::$app->request->post()){
-           
+           $params= array();
             $user_id=Yii::$app->user->identity->user_id;
             $model->attributes=$_POST['TenderStageSettings'];
              $model->user_id=$user_id;
-             $flag=$model->save();
+
+
+             $params["type"]=$model->type;
+             $params["bid_section"]=$model->bid_section;
+             $model->uploaded_file = UploadedFile::getInstance($model, 'uploaded_file');
+             if(!empty($model->uploaded_file)){
+                 
+                $file=$model->uploaded_file;
+                
+$exponent = 3; // Amount of digits
+$min = pow(10,$exponent);
+$max = pow(10,$exponent+1)-1;
+//1
+$value = rand($min, $max);
+$unification= date("Ymdhms")."".$value;
+ 
+  $temp= explode(".",   $file->name);
+  $ext = end($temp);
+  $path_to_attach='uploads/procurement/templates/'. $unification.".{$ext}";
+   
+ $params["template"]=$path_to_attach;
+ $file->saveAs($path_to_attach); 
+             }
+$model->params= Json::encode( $params,JSON_UNESCAPED_SLASHES);
+$flag=$model->save();
              if($flag)
              {
             Yii::$app->session->setFlash('success','Tender stage  Saved !');
+            
             return $this->redirect(['index']);
              }
         }
 
-        return $this->renderAjax('create', [
+
+        if (Yii::$app->request->isAjax)
+        {  
+            return $this->renderAjax('create', [
+            'model' => $model,
+        ]);
+    }
+
+        return $this->render('create', [
             'model' => $model,
         ]);
     }
@@ -110,12 +144,58 @@ class TenderStageSettingsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+        if($model->params!=null)
+        {
+        $params= Json::decode($model->params,JSON_UNESCAPED_SLASHES);
+        $model->type=$params["type"];
+        $model->bid_section=$params["bid_section"];
+        $model->template=$params["template"];
         }
+        if(Yii::$app->request->post()){
+            $params_request= array();
+             $user_id=Yii::$app->user->identity->user_id;
+             $model->attributes=$_POST['TenderStageSettings'];
+              $model->user_id=$user_id;
+ 
+ 
+              $params_request["type"]=$model->type;
+              $params_request["bid_section"]=$model->bid_section;
+              $model->uploaded_file = UploadedFile::getInstance($model, 'uploaded_file');
+              if(!empty($model->uploaded_file)){
+                  
+                 $file=$model->uploaded_file;
+                 
+ $exponent = 3; // Amount of digits
+ $min = pow(10,$exponent);
+ $max = pow(10,$exponent+1)-1;
+ //1
+ $value = rand($min, $max);
+ $unification= date("Ymdhms")."".$value;
+  
+   $temp= explode(".",   $file->name);
+   $ext = end($temp);
+   $path_to_attach='uploads/procurement/templates/'. $unification.".{$ext}";
+    
+  $params_request["template"]=$path_to_attach;
+  $file->saveAs($path_to_attach); 
+              }
+ $model->params= Json::encode( $params_request,JSON_UNESCAPED_SLASHES);
+ $flag=$model->save();
+              if($flag)
+              {
+             Yii::$app->session->setFlash('success','Tender stage  Saved !');
+             return $this->redirect(['index']);
+              }
+         }
 
-        return $this->renderAjax('update', [
+         if (Yii::$app->request->isAjax)
+        {  
+            return $this->renderAjax('create', [
+            'model' => $model,
+        ]);
+    }
+
+        return $this->render('create', [
             'model' => $model,
         ]);
     }

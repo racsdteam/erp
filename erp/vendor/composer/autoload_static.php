@@ -9,13 +9,16 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
     public static $files = array (
         '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+        'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
-        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
-        'def43f6c87e4f8dfd0c9e1b1bab14fe8' => __DIR__ . '/..' . '/symfony/polyfill-iconv/bootstrap.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+        'def43f6c87e4f8dfd0c9e1b1bab14fe8' => __DIR__ . '/..' . '/symfony/polyfill-iconv/bootstrap.php',
+        '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         '180092cfc969a12e06f2132a203a3184' => __DIR__ . '/..' . '/codeception/verify/src/Codeception/function.php',
@@ -29,6 +32,7 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         'y' => 
         array (
             'yii\\swiftmailer\\' => 16,
+            'yii\\mongodb\\' => 12,
             'yii\\gii\\' => 8,
             'yii\\faker\\' => 10,
             'yii\\debug\\' => 10,
@@ -50,7 +54,6 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         's' => 
         array (
             'softark\\duallistbox\\' => 20,
-            'setasign\\Fpdi\\' => 14,
         ),
         'r' => 
         array (
@@ -108,9 +111,11 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         ),
         'S' => 
         array (
+            'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Php73\\' => 23,
             'Symfony\\Polyfill\\Php72\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Polyfill\\Intl\\Normalizer\\' => 33,
             'Symfony\\Polyfill\\Intl\\Idn\\' => 26,
             'Symfony\\Polyfill\\Iconv\\' => 23,
             'Symfony\\Polyfill\\Ctype\\' => 23,
@@ -127,14 +132,10 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         ),
         'P' => 
         array (
-            'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
             'Prophecy\\' => 9,
-        ),
-        'M' => 
-        array (
-            'Mpdf\\' => 5,
+            'PHPStan\\PhpDocParser\\' => 21,
         ),
         'G' => 
         array (
@@ -152,6 +153,7 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         'D' => 
         array (
             'Doctrine\\Instantiator\\' => 22,
+            'Doctrine\\Deprecations\\' => 22,
             'Doctrine\\Common\\Lexer\\' => 22,
             'DeepCopy\\' => 9,
         ),
@@ -172,13 +174,17 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2-swiftmailer/src',
         ),
+        'yii\\mongodb\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yiisoft/yii2-mongodb/src',
+        ),
         'yii\\gii\\' => 
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2-gii/src',
         ),
         'yii\\faker\\' => 
         array (
-            0 => __DIR__ . '/..' . '/yiisoft/yii2-faker',
+            0 => __DIR__ . '/..' . '/yiisoft/yii2-faker/src',
         ),
         'yii\\debug\\' => 
         array (
@@ -210,7 +216,7 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         ),
         'wbraganca\\dynamicform\\' => 
         array (
-            0 => __DIR__ . '/..' . '/wbraganca/yii2-dynamicform',
+            0 => __DIR__ . '/..' . '/wbraganca/yii2-dynamicform/src',
         ),
         'vivekmarakana\\widgets\\' => 
         array (
@@ -219,10 +225,6 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         'softark\\duallistbox\\' => 
         array (
             0 => __DIR__ . '/..' . '/softark/yii2-dual-listbox',
-        ),
-        'setasign\\Fpdi\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/setasign/fpdi/src',
         ),
         'rmrevin\\yii\\fontawesome\\' => 
         array (
@@ -252,7 +254,7 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         ),
         'kartik\\popover\\' => 
         array (
-            0 => __DIR__ . '/..' . '/kartik-v/yii2-popover-x',
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-popover-x/src',
         ),
         'kartik\\plugins\\popover\\' => 
         array (
@@ -264,7 +266,7 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         ),
         'kartik\\growl\\' => 
         array (
-            0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-growl',
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-growl/src',
         ),
         'kartik\\form\\' => 
         array (
@@ -288,7 +290,7 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         ),
         'kartik\\alert\\' => 
         array (
-            0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-alert',
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-alert/src',
         ),
         'edwinhaq\\simpleduallistbox\\' => 
         array (
@@ -322,6 +324,10 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
         ),
+        'Symfony\\Polyfill\\Php80\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
+        ),
         'Symfony\\Polyfill\\Php73\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php73',
@@ -333,6 +339,10 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'Symfony\\Polyfill\\Intl\\Normalizer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer',
         ),
         'Symfony\\Polyfill\\Intl\\Idn\\' => 
         array (
@@ -386,10 +396,6 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         array (
             0 => __DIR__ . '/..' . '/soundasleep/html2text/src',
         ),
-        'Psr\\Log\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
-        ),
         'Psr\\Http\\Message\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
@@ -402,9 +408,9 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         array (
             0 => __DIR__ . '/..' . '/phpspec/prophecy/src/Prophecy',
         ),
-        'Mpdf\\' => 
+        'PHPStan\\PhpDocParser\\' => 
         array (
-            0 => __DIR__ . '/..' . '/mpdf/mpdf/src',
+            0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (
@@ -416,19 +422,23 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         ),
         'Faker\\' => 
         array (
-            0 => __DIR__ . '/..' . '/fzaninotto/faker/src/Faker',
+            0 => __DIR__ . '/..' . '/fakerphp/faker/src/Faker',
         ),
         'Egulias\\EmailValidator\\' => 
         array (
-            0 => __DIR__ . '/..' . '/egulias/email-validator/EmailValidator',
+            0 => __DIR__ . '/..' . '/egulias/email-validator/src',
         ),
         'Doctrine\\Instantiator\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator',
         ),
+        'Doctrine\\Deprecations\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/deprecations/lib/Doctrine/Deprecations',
+        ),
         'Doctrine\\Common\\Lexer\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/lexer/lib/Doctrine/Common/Lexer',
+            0 => __DIR__ . '/..' . '/doctrine/lexer/src',
         ),
         'DeepCopy\\' => 
         array (
@@ -488,6 +498,8 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
     );
 
     public static $classMap = array (
+        'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Datamatrix' => __DIR__ . '/..' . '/daltcore/lara-pdf-merger/src/LynX39/LaraPdfMerger/tcpdf/include/barcodes/datamatrix.php',
         'EasyPeasyICS' => __DIR__ . '/..' . '/phpmailer/phpmailer/extras/EasyPeasyICS.php',
         'FPDF' => __DIR__ . '/..' . '/daltcore/lara-pdf-merger/src/LynX39/LaraPdfMerger/tcpdf/tcpdi.php',
@@ -496,6 +508,7 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         'LynX39\\LaraPdfMerger\\Facades\\PdfMerger' => __DIR__ . '/..' . '/daltcore/lara-pdf-merger/src/LynX39/LaraPdfMerger/Facades/PdfMerger.php',
         'LynX39\\LaraPdfMerger\\PdfManage' => __DIR__ . '/..' . '/daltcore/lara-pdf-merger/src/LynX39/LaraPdfMerger/PdfManage.php',
         'LynX39\\LaraPdfMerger\\PdfMergerServiceProvider' => __DIR__ . '/..' . '/daltcore/lara-pdf-merger/src/LynX39/LaraPdfMerger/PdfMergerServiceProvider.php',
+        'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
         'PDF417' => __DIR__ . '/..' . '/daltcore/lara-pdf-merger/src/LynX39/LaraPdfMerger/tcpdf/include/barcodes/pdf417.php',
         'PHPMailer' => __DIR__ . '/..' . '/phpmailer/phpmailer/class.phpmailer.php',
         'PHPMailerOAuth' => __DIR__ . '/..' . '/phpmailer/phpmailer/class.phpmaileroauth.php',
@@ -941,6 +954,7 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         'PharIo\\Version\\VersionConstraintParser' => __DIR__ . '/..' . '/phar-io/version/src/VersionConstraintParser.php',
         'PharIo\\Version\\VersionConstraintValue' => __DIR__ . '/..' . '/phar-io/version/src/VersionConstraintValue.php',
         'PharIo\\Version\\VersionNumber' => __DIR__ . '/..' . '/phar-io/version/src/VersionNumber.php',
+        'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
         'QRcode' => __DIR__ . '/..' . '/daltcore/lara-pdf-merger/src/LynX39/LaraPdfMerger/tcpdf/include/barcodes/qrcode.php',
         'SMTP' => __DIR__ . '/..' . '/phpmailer/phpmailer/class.smtp.php',
         'SebastianBergmann\\CodeCoverage\\CodeCoverage' => __DIR__ . '/..' . '/phpunit/php-code-coverage/src/CodeCoverage.php',
@@ -1042,6 +1056,7 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         'SebastianBergmann\\Timer\\RuntimeException' => __DIR__ . '/..' . '/phpunit/php-timer/src/RuntimeException.php',
         'SebastianBergmann\\Timer\\Timer' => __DIR__ . '/..' . '/phpunit/php-timer/src/Timer.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
+        'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'TCPDF' => __DIR__ . '/..' . '/daltcore/lara-pdf-merger/src/LynX39/LaraPdfMerger/tcpdf/tcpdf.php',
         'TCPDF2DBarcode' => __DIR__ . '/..' . '/daltcore/lara-pdf-merger/src/LynX39/LaraPdfMerger/tcpdf/tcpdf_barcodes_2d.php',
         'TCPDFBarcode' => __DIR__ . '/..' . '/daltcore/lara-pdf-merger/src/LynX39/LaraPdfMerger/tcpdf/tcpdf_barcodes_1d.php',
@@ -1063,6 +1078,8 @@ class ComposerStaticInit33057934f3e7eaaa1ce2d53797277936
         'TheSeer\\Tokenizer\\TokenCollectionException' => __DIR__ . '/..' . '/theseer/tokenizer/src/TokenCollectionException.php',
         'TheSeer\\Tokenizer\\Tokenizer' => __DIR__ . '/..' . '/theseer/tokenizer/src/Tokenizer.php',
         'TheSeer\\Tokenizer\\XMLSerializer' => __DIR__ . '/..' . '/theseer/tokenizer/src/XMLSerializer.php',
+        'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
+        'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
         'ntlm_sasl_client_class' => __DIR__ . '/..' . '/phpmailer/phpmailer/extras/ntlm_sasl_client.php',
         'phpmailerException' => __DIR__ . '/..' . '/phpmailer/phpmailer/class.phpmailer.php',
         'tcpdi_parser' => __DIR__ . '/..' . '/daltcore/lara-pdf-merger/src/LynX39/LaraPdfMerger/tcpdf/tcpdi_parser.php',

@@ -25,30 +25,25 @@
         "kartik-v/yii2-widget-alert": "*",
         "kartik-v/yii2-widget-growl": "*",
         "aryelds/yii2-sweet-alert": "@dev",
-        
-       
         "kartik-v/yii2-widget-select2": "@dev",
         "kartik-v/yii2-widget-fileinput": "@dev",
-        
         "kop/yii2-conditional-validator": "dev-master",
-       
         "borales/yii2-phone-input": "*",
-       
-       
         "softark/yii2-dual-listbox": "^1.0",
         "kartik-v/yii2-popover-x": "*",
         "edwinhaq/yii2-simple-dual-listbox": "*",
         "drsdre/yii2-wizardwidget": "*",
         "yii2mod/yii2-bootstrap-notify": "*",
         "phpoffice/phpexcel": "^1.8",
-       
          "vivekmarakana/yii2-timeline-widget": "dev-master",
 		 "symfony/dom-crawler": "2.8",
           "symfony/css-selector": "2.8",
         "wbraganca/yii2-dynamicform": "*",
        "daltcore/lara-pdf-merger": "^1.1",
         "2amigos/yii2-tinymce-widget": "~1.1",
-        "kartik-v/yii2-tree-manager": "dev-master"
+        "kartik-v/yii2-tree-manager": "dev-master",
+        "yiisoft/yii2-bootstrap4": "^2.0",
+        "yiisoft/yii2-mongodb": "^3.0"
        
     },
     "require-dev": {
@@ -66,12 +61,15 @@
     ]
 },
     "config": {
-        "process-timeout": 1800
+        "process-timeout": 1800,
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true
+        }
     },
     "repositories": [
         {
             "type": "composer",
-            "url": "https://asset-packagist.org"
+            "url": "https://repo.packagist.org"
         }
     ]
 }

@@ -22,7 +22,7 @@ return [
     	//----------------------setting landin page
    
     'components' => [
-        
+
           'i18n' => [
         'translations' => [
             'kvtree*' => [

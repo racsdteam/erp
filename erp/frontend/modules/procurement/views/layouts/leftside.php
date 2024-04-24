@@ -147,14 +147,14 @@ use frontend\modules\hr\models\EmployeeStatuses;
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="<?=Url::to(['leave-request/create'])?>" title="All Security Groups" class="nav-link">
+                <a href="<?=Url::to(['tenders/create'])?>" title="All Security Groups" class="nav-link">
                   <i class="fas fa-plus-square  nav-icon"></i> 
                   <p>Create Tender</p>
                 </a>
               </li>
               
                <li class="nav-item">
-                <a href="<?=Url::to(['leave-request/draft'])?>" title="New Security Group " 
+                <a href="<?=Url::to(['tenders/draft'])?>" title="New Security Group " 
                 class="nav-link">
                   <i class="fas fa-edit nav-icon"></i> 
                   <p>Draft Tenders</p>
@@ -162,7 +162,7 @@ use frontend\modules\hr\models\EmployeeStatuses;
               </li>
               
                 <li class="nav-item">
-                <a href="<?=Url::to(['leave-request/my-leave'])?>" title="New Security Group " 
+                <a href="<?=Url::to(['tenders/my-leave'])?>" title="New Security Group " 
                 class="nav-link">
                   <i class="fas fa-database nav-icon"></i>
                   <p> Submitted Tenders</p>
@@ -203,7 +203,7 @@ use frontend\modules\hr\models\EmployeeStatuses;
               </li>
               
               <li class="nav-item">
-                <a href="<?=Url::to(['leave-request/draft'])?>" title="New Security Group " 
+                <a href="<?=Url::to(['tenders/index'])?>" title="New Security Group " 
                 class="nav-link">
                   <i class="fas fa-database nav-icon"></i>
                   <p> All Tenders</p>
@@ -238,48 +238,65 @@ use frontend\modules\hr\models\EmployeeStatuses;
                 </a>
               </li>
                <li class="nav-item">
-                <a href="<?=Url::to(['procurement-notices/index'])?>" title="New Security Group " 
-                class="nav-link">
-                  <i class="fas fa-database nav-icon"></i>
-                  <p>Procurement Notices</p>
-                </a>
-              </li>
-              
-               <li class="nav-item">
                 <a href="<?=Url::to(['procurement-date-types/index'])?>" title="New Security Group " 
                 class="nav-link">
                   <i class="fas fa-database nav-icon"></i>
                   <p>Procurement Date Types</p>
                 </a>
               </li>
-              
-                <li class="nav-item">
-                <a href="<?=Url::to(['funding-sources/index'])?>" title="All Security Groups" class="nav-link">
+              <li class="nav-item">
+                <a href="<?=Url::to(['funding-sources/index'])?>" title="Setting Fundin" class="nav-link">
                   <i class="fas fa-coins nav-icon"></i>
                   <p>Funding Sources</p>
                 </a>
               </li>
                 <li class="nav-item">
-                <a href="<?=Url::to(['tender-stages/index'])?>" title="All Security Groups" class="nav-link">
+                <a href="<?=Url::to(['tender-stages/index'])?>" title="tender stages" class="nav-link">
                   <i class="fas fa-coins nav-icon"></i>
                   <p>Tender Stages</p>
                 </a>
               </li>
                 <li class="nav-item">
-                <a href="<?=Url::to(['tender-stage-settings/index'])?>" title="All Security Groups" class="nav-link">
+                <a href="<?=Url::to(['tender-stage-settings/index'])?>" title="Setting tender stages" class="nav-link">
                   <i class="fas fa-coins nav-icon"></i>
                   <p>Tender Stages Settings</p>
                 </a>
               </li>
                 <li class="nav-item">
-                <a href="<?=Url::to(['currencies/index'])?>" title="All Security Groups" class="nav-link">
+                <a href="<?=Url::to(['currencies/index'])?>" title="Setting currencies" class="nav-link">
                   <i class="fas fa-coins nav-icon"></i>
                   <p>Currencies</p>
                 </a>
-              </li>  <li class="nav-item">
-                <a href="<?=Url::to(['funding-sources/index'])?>" title="All Security Groups" class="nav-link">
+              </li>  
+              </li>
+              <li>
+              <a href="<?=Url::to(['envelope-setting/index'])?>" title="Setting Envelope" class="nav-link">
                   <i class="fas fa-coins nav-icon"></i>
-                  <p>Funding Sources</p>
+                  <p>Envelope</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?=Url::to(['section-settings/index'])?>" title="Setting Section" class="nav-link">
+                  <i class="fas fa-coins nav-icon"></i>
+                  <p>Sections</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?=Url::to(['documents-settings/index'])?>" title="Setting Documents" class="nav-link">
+                  <i class="fas fa-coins nav-icon"></i>
+                  <p>Documents</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?=Url::to(['incoterms-setting/index'])?>" title="Setting Documents" class="nav-link">
+                  <i class="fas fa-coins nav-icon"></i>
+                  <p>INCOTERMS</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?=Url::to(['tender-item-types-setting/index'])?>" title="Setting Documents" class="nav-link">
+                  <i class="fas fa-coins nav-icon"></i>
+                  <p>Tender Item Types</p>
                 </a>
               </li>
             </ul>

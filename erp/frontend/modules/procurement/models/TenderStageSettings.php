@@ -17,8 +17,14 @@ use common\models\User;
  * @property int $user_id
  * @property string $timestamp
  */
+
+
 class TenderStageSettings extends \yii\db\ActiveRecord
 {
+    public $type;
+    public $template;
+    public $bid_section;
+    public $uploaded_file;
     /**
      * {@inheritdoc}
      */
@@ -41,12 +47,20 @@ class TenderStageSettings extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'code', 'min_period', 'max_period', 'stage_outcome', 'color_code', 'user_id'], 'required'],
+            [['name', 'code', 'min_period', 'max_period','type','bid_section','in_charge','stage_outcome', 'color_code', 'user_id'], 'required'],
             [['min_period', 'max_period', 'user_id'], 'integer'],
             [['timestamp'], 'safe'],
-            [['name', 'stage_outcome'], 'string', 'max' => 1000],
+            [['name', 'stage_outcome','type','bid_section','template','in_charge'], 'string', 'max' => 1000],
             [['code'], 'string', 'max' => 8],
             [['color_code'], 'string', 'max' => 256],
+            ['uploaded_file', 'required',
+            'when' => function ($model) {
+                return false;
+            },
+            'whenClient' => "function (attribute, value) {    
+          return ($('.field-uploaded_file .file-input .kv-file-content').find('embed').length == 0 );
+        }"]
+
         ];
     }
 

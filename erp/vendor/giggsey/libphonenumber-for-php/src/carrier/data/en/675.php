@@ -11,15 +11,13 @@
  */
 
 return array (
-  67570 => 'Digicel',
-  67571 => 'Digicel',
-  67572 => 'Digicel',
-  67573 => 'Digicel',
-  67574 => 'Digicel',
+  6757 => 'Digicel',
   67575 => 'bmobile',
   67576 => 'bmobile',
-  675775 => 'Telikom',
-  67578 => 'Telikom',
-  67579 => 'Digicel',
-  67581 => 'DIGIVOIP',
+  67577 => 'bmobile',
+  67578 => 'bmobile',
+  67581 => 'Vodafone',
+  67582 => 'Vodafone',
+  67583 => 'Vodafone',
+  67588 => 'Digicel',
 );

@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
+ * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @license https://www.yiiframework.com/license/
  */
 
 namespace yii\bootstrap4;
@@ -17,7 +17,7 @@ use yii\base\InvalidConfigException;
  *
  * ```php
  * <?= $form->field($model, 'item_id')->widget(\yii\bootstrap4\ToggleButtonGroup::class, [
- *     'type' => \yii\bootstrap4\ToggleButtonGroup::TYPE_CHECKBOX
+ *     'type' => \yii\bootstrap4\ToggleButtonGroup::TYPE_CHECKBOX,
  *     'items' => [
  *         'fooValue' => 'BarLabel',
  *         'barValue' => 'BazLabel'
@@ -25,7 +25,7 @@ use yii\base\InvalidConfigException;
  * ]) ?>
  * ```
  *
- * @see http://getbootstrap.com/javascript/#buttons-checkbox-radio
+ * @see https://getbootstrap.com/docs/4.5/components/buttons/#checkbox-and-radio-buttons
  *
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @author Simon Karlen <simi.albi@outlook.com>
@@ -117,9 +117,9 @@ class ToggleButtonGroup extends InputWidget
     {
         $labelOptions = $this->labelOptions;
         $labelOptions['wrapInput'] = true;
-        Html::addCssClass($labelOptions, 'btn');
+        Html::addCssClass($labelOptions, ['widget' => 'btn']);
         if ($checked) {
-            Html::addCssClass($labelOptions, 'active');
+            Html::addCssClass($labelOptions, ['activate' => 'active']);
         }
         $type = $this->type;
         if ($this->encodeLabels) {
@@ -129,7 +129,8 @@ class ToggleButtonGroup extends InputWidget
             'label' => $label,
             'labelOptions' => $labelOptions,
             'autocomplete' => 'off',
-            'value' => $value
+            'value' => $value,
+            'id' => Html::getInputIdByName($name) . '-' . $index
         ]);
     }
 }

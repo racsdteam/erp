@@ -10,6 +10,7 @@ use yii\base\UserException;
 use frontend\modules\procurement\models\ProcurementActivities;
 use frontend\modules\procurement\models\ProcurementPlans;
 use frontend\modules\procurement\models\ProcurementPlanApprovals;
+use frontend\modules\procurement\models\Tenders;
 use common\components\Constants;
 
 class ProcurementUtil extends Component {
@@ -98,6 +99,23 @@ public function pending($_user,$filter_new, $count=0){
  
     
    }
+
+   public function generateTenderCode($procurement_method_code,$procurement_category_code){
+       
+    $last_tender= Tenders::find()->where(['number' => ['$ne' => null]])->orderBy(['_id' => SORT_DESC])->limit(1)->one();
+    $pad_base=1;
+    
+if(1<= (int) date("m") and 6>= (int) date("m")):
+    $fin_year= ((int)date("y")-1)."-".date("y");
+else:
+    $fin_year= date("y")."-".((int)date("y")+1);
+endif;
+    
+    if($last_tender==null){
+        return  "N0:001/".$procurement_category_code."/".$procurement_category_code."/".$fin_year."/RAC";
+            }
+            return  "N0:001/".$procurement_category_code."/".$procurement_category_code."/".$fin_year."/RAC";
+}
 
  } 
 ?>

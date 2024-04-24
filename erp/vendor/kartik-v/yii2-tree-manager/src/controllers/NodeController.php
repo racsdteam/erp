@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2015 - 2019
+ * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2015 - 2022
  * @package   yii2-tree-manager
  * @version   1.1.3
  */
@@ -10,6 +10,7 @@ namespace kartik\tree\controllers;
 
 use Closure;
 use Exception;
+use kartik\base\Lib;
 use kartik\tree\Module;
 use kartik\tree\models\Tree;
 use kartik\tree\TreeView;
@@ -27,9 +28,9 @@ use yii\web\Response;
 use yii\web\View;
 
 /**
- * The `NodeController` class manages all the manipulation actions for each tree node. It includes security
- * validations to ensure the actions are accessible only via `ajax` or `post` requests. In addition, it includes
- * stateless signature token validation to cross check data is not tampered before the request is sent via POST.
+ * NodeController manages all the manipulation actions for each tree node. It includes security validations to ensure
+ * the actions are accessible only via `ajax` or `post` requests. In addition, it includes stateless signature token
+ * validation to cross check that data is not tampered before the request is sent via POST.
  */
 class NodeController extends Controller
 {
@@ -143,7 +144,6 @@ class NodeController extends Controller
         $post = Yii::$app->request->post();
         static::checkValidRequest(false, !isset($post['treeNodeModify']));
         $data = static::getPostData();
-       
         $parentKey = ArrayHelper::getValue($data, 'parentKey', null);
         $treeNodeModify = ArrayHelper::getValue($data, 'treeNodeModify', null);
         $currUrl = ArrayHelper::getValue($data, 'currUrl', '');
@@ -151,18 +151,13 @@ class NodeController extends Controller
         $module = TreeView::module();
         $keyAttr = $module->dataStructure['keyAttribute'];
         $nodeTitles = TreeSecurity::getNodeTitles($data);
-        $leftAttr=$module->treeStructure['leftAttribute'];
-        $rightAttr=$module->treeStructure['rightAttribute'];
-        $depthAttr=$module->treeStructure['depthAttribute'];
 
         if ($treeNodeModify) {
-
-            
             $node = new $treeClass;
             $successMsg = Yii::t('kvtree', 'The {node} was successfully created.', $nodeTitles);
             $errorMsg = Yii::t('kvtree', 'Error while creating the {node}. Please try again later.', $nodeTitles);
         } else {
-            $tag = explode("\\", $treeClass);
+            $tag = Lib::explode("\\", $treeClass);
             $tag = array_pop($tag);
             $id = $post[$tag][$keyAttr];
             $node = $treeClass::findOne($id);
@@ -170,11 +165,10 @@ class NodeController extends Controller
             $errorMsg = Yii::t('kvtree', 'Error while saving the {node}. Please try again later.', $nodeTitles);
         }
         $node->activeOrig = $node->active;
-        
+        $node->visibleOrig = $node->visible;
+        $node->disabledOrig = $node->disabled;
         $isNewRecord = $node->isNewRecord;
         $node->load($post);
-
-        //var_dump($node->attributes);die();
         $errors = $success = false;
         if (Yii::$app->has('session')) {
             $session = Yii::$app->session;
@@ -199,8 +193,8 @@ class NodeController extends Controller
         }
         if ($node->save()) {
             // check if active status was changed
-            if (!$isNewRecord && $node->activeOrig != $node->active) {
-                if ($node->active) {
+            if (!$isNewRecord && $node->activeOrig != $node->active || !$isNewRecord && $node->visibleOrig != $node->visible || !$isNewRecord && $node->disabledOrig != $node->disabled) {
+                if ($node->active || $node->visible || $node->disabled) {
                     $success = $node->activateNode(false);
                     $errors = $node->nodeActivationErrors;
                 } else {
@@ -235,68 +229,6 @@ class NodeController extends Controller
         return $this->redirect($currUrl);
     }
 
-
-     /**
-     * View, create, or update a tree node via ajax
-     *
-     * @return mixed json encoded response
-     */
-    public function actionCreate()
-    {
-        static::checkValidRequest();
-        $data = static::getPostData();
-       
-        $nodeTitles = TreeSecurity::getNodeTitles($data);
-        
-        $callback = function () use ($data, $nodeTitles) {
-            $id = ArrayHelper::getValue($data, 'id', null);
-            $parentKey = ArrayHelper::getValue($data, 'parentKey', '');
-            $parsedData = TreeSecurity::parseManageData($data);
-            $out = $parsedData['out'];
-            $oldHash = $parsedData['oldHash'];
-            $newHash = $parsedData['newHash'];
-            /**
-             * @var Module $module
-             * @var Tree $treeClass
-             * @var Tree $node
-             */
-            $treeClass = $out['treeClass'];
-            if (!isset($id) || empty($id)) {
-                $node = new $treeClass;
-                $node->initDefaults();
-            } else {
-                $node = $treeClass::findOne($id);
-            }
-            $module = TreeView::module();
-            
-            $params=$module->treeStructure + $module->dataStructure + [
-                    'node' => $node,
-                    'parentKey' => $parentKey,
-                    'treeManageHash' => $newHash,
-                    'treeRemoveHash' => ArrayHelper::getValue($data, 'treeRemoveHash', ''),
-                    'treeMoveHash' => ArrayHelper::getValue($data, 'treeMoveHash', ''),
-                ] + $out;
-            if (!empty($data['nodeViewParams'])) {
-                $params = ArrayHelper::merge($params, unserialize($data['nodeViewParams']));
-            }
-            if (!empty($module->unsetAjaxBundles)) {
-                $cb = function ($e) use ($module) {
-                    foreach ($module->unsetAjaxBundles as $bundle) {
-                        unset($e->sender->assetBundles[$bundle]);
-                    }
-                };
-                Event::on(View::class, View::EVENT_AFTER_RENDER, $cb);
-            }
-            TreeSecurity::checkSignature('manage', $oldHash, $newHash);
-            //return $this->renderAjax($out['nodeView'], ['params' => $params]);
-            return 1;
-        };
-        return self::process(
-            $callback,
-            Yii::t('kvtree', 'Error while viewing the {node}. Please try again later.', $nodeTitles),
-            null
-        );
-    }
     /**
      * View, create, or update a tree node via ajax
      *
@@ -304,14 +236,9 @@ class NodeController extends Controller
      */
     public function actionManage()
     {
-        
-        
-        
         static::checkValidRequest();
         $data = static::getPostData();
-       
         $nodeTitles = TreeSecurity::getNodeTitles($data);
-        
         $callback = function () use ($data, $nodeTitles) {
             $id = ArrayHelper::getValue($data, 'id', null);
             $parentKey = ArrayHelper::getValue($data, 'parentKey', '');
@@ -332,8 +259,7 @@ class NodeController extends Controller
                 $node = $treeClass::findOne($id);
             }
             $module = TreeView::module();
-            
-            $params=$module->treeStructure + $module->dataStructure + [
+            $params = $module->treeStructure + $module->dataStructure + [
                     'node' => $node,
                     'parentKey' => $parentKey,
                     'treeManageHash' => $newHash,

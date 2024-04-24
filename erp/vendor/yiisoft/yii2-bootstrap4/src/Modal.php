@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
+ * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @license https://www.yiiframework.com/license/
  */
 
 namespace yii\bootstrap4;
@@ -27,7 +27,7 @@ use yii\helpers\ArrayHelper;
  * Modal::end();
  * ~~~
  *
- * @see https://getbootstrap.com/docs/4.2/components/modal/
+ * @see https://getbootstrap.com/docs/4.5/components/modal/
  * @author Antonio Ramirez <amigo.cobos@gmail.com>
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @author Simon Karlen <simi.albi@outlook.com>
@@ -95,7 +95,7 @@ class Modal extends Widget
      * - label: string, the label of the button. Defaults to '&times;'.
      *
      * The rest of the options will be rendered as the HTML attributes of the button tag.
-     * Please refer to the [Modal plugin help](http://getbootstrap.com/javascript/#modals)
+     * Please refer to the [Modal plugin help](https://getbootstrap.com/javascript/#modals)
      * for the supported HTML attributes.
      */
     public $closeButton = [];
@@ -110,10 +110,30 @@ class Modal extends Widget
      * - label: string, the label of the button. Defaults to 'Show'.
      *
      * The rest of the options will be rendered as the HTML attributes of the button tag.
-     * Please refer to the [Modal plugin help](http://getbootstrap.com/javascript/#modals)
+     * Please refer to the [Modal plugin help](https://getbootstrap.com/javascript/#modals)
      * for the supported HTML attributes.
      */
     public $toggleButton = false;
+    /**
+     * @var boolean whether to center the modal vertically
+     *
+     * When true the modal-dialog-centered class will be added to the modal-dialog
+     * @since 2.0.9
+     */
+    public $centerVertical = false;
+    /**
+     * @var boolean whether to make the modal body scrollable
+     *
+     * When true the modal-dialog-scrollable class will be added to the modal-dialog
+     * @since 2.0.9
+     */
+    public $scrollable = false;
+    /**
+     * @var array modal dialog options
+     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @since 2.0.9
+     */
+    public $dialogOptions = [];
 
 
     /**
@@ -127,7 +147,7 @@ class Modal extends Widget
 
         echo $this->renderToggleButton() . "\n";
         echo Html::beginTag('div', $this->options) . "\n";
-        echo Html::beginTag('div', ['class' => 'modal-dialog ' . $this->size]) . "\n";
+        echo Html::beginTag('div', $this->dialogOptions) . "\n";
         echo Html::beginTag('div', ['class' => 'modal-content']) . "\n";
         echo $this->renderHeader() . "\n";
         echo $this->renderBodyBegin() . "\n";
@@ -278,6 +298,20 @@ class Modal extends Widget
             if (!isset($this->toggleButton['data-target']) && !isset($this->toggleButton['href'])) {
                 $this->toggleButton['data-target'] = '#' . $this->options['id'];
             }
+        }
+
+        $this->dialogOptions = array_merge([
+            'role' => 'document'
+        ], $this->dialogOptions);
+        Html::addCssClass($this->dialogOptions, ['widget' => 'modal-dialog']);
+        if ($this->size) {
+            Html::addCssClass($this->dialogOptions, ['size' => $this->size]);
+        }
+        if ($this->centerVertical) {
+            Html::addCssClass($this->dialogOptions, ['align' => 'modal-dialog-centered']);
+        }
+        if ($this->scrollable) {
+            Html::addCssClass($this->dialogOptions, ['scroll' => 'modal-dialog-scrollable']);
         }
     }
 }

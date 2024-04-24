@@ -6,10 +6,12 @@
     yii2-detail-view
     <hr>
     <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DTP3NZQ6G2AYU"
-       title="Donate via Paypal" target="_blank">
-        <img src="http://kartik-v.github.io/bootstrap-fileinput-samples/samples/donate.png" alt="Donate"/>
-    </a>
+       title="Donate via Paypal" target="_blank"><img height="60" src="https://kartik-v.github.io/bootstrap-fileinput-samples/samples/donate.png" alt="Donate"/></a>
+    &nbsp; &nbsp; &nbsp;
+    <a href="https://www.buymeacoffee.com/kartikv" title="Buy me a coffee" ><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="60" alt="kartikv" /></a>
 </h1>
+
+<div align="center">
 
 [![Stable Version](https://poser.pugx.org/kartik-v/yii2-detail-view/v/stable)](https://packagist.org/packages/kartik-v/yii2-detail-view)
 [![Unstable Version](https://poser.pugx.org/kartik-v/yii2-detail-view/v/unstable)](https://packagist.org/packages/kartik-v/yii2-detail-view)
@@ -18,6 +20,8 @@
 [![Monthly Downloads](https://poser.pugx.org/kartik-v/yii2-detail-view/d/monthly)](https://packagist.org/packages/kartik-v/yii2-detail-view)
 [![Daily Downloads](https://poser.pugx.org/kartik-v/yii2-detail-view/d/daily)](https://packagist.org/packages/kartik-v/yii2-detail-view)
 
+</div>
+
 An extended Yii2 DetailView with many additional features. Extends the Yii DetailView to support multi columnar rows and work in both VIEW and 
 EDIT modes. Accelerates your development by using a single configuration of attributes for both VIEW and EDIT. The extension also 
 includes easier methods to style your detail view widget cells, data, form inputs, widgets, and columns (more specifically for Bootstrap 3). 
@@ -25,12 +29,12 @@ The widget by default can be styled within a Bootstrap 3 panel with a buttons to
 Refer [detailed documentation](http://demos.krajee.com/detail-view) and/or a [complete demo](http://demos.krajee.com/detail-view-demo).
 
 ### Latest Release
-The latest version of the extension is release v1.7.7. Refer the [CHANGE LOG](https://github.com/kartik-v/yii2-detail-view/blob/master/CHANGE.md) for details of various releases.
+Refer the [CHANGE LOG](https://github.com/kartik-v/yii2-detail-view/blob/master/CHANGE.md) for details of changes to various releases.
 
-> NOTE: The extension includes a BC Breaking change with v1.7.0. With this release, the `template` property of the yii core DetailView is not anymore supported. One can use `rowOptions`, `labelColOptions`, `valueColOptions` at the widget level or widget `attributes` level to configure advanced layout functionality.
+> NOTE: Bootstrap 5.x support is added since v1.8.4. The extension includes a BC Breaking change with v1.7.0. With this release, the `template` property of the yii core DetailView is not anymore supported. One can use `rowOptions`, `labelColOptions`, `valueColOptions` at the widget level or widget `attributes` level to configure advanced layout functionality.
 
-### Demo
-You can see detailed [documentation](http://demos.krajee.com/detail-view) and [demonstration](http://demos.krajee.com/detail-view-demo) on usage of the extension.
+### Docs & Demo
+You can see detailed [documentation](http://demos.krajee.com/detail-view), [demonstration](http://demos.krajee.com/detail-view-demo) and API [code documentation](https://docs.krajee.com/kartik-detail-detailview) on usage of the extension.
 
 ## Installation
 

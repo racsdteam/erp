@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
+ * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @license https://www.yiiframework.com/license/
  */
 
 namespace yii\bootstrap4;
@@ -19,12 +19,12 @@ use yii\helpers\ArrayHelper;
  * echo Carousel::widget([
  *     'items' => [
  *         // the item contains only the image
- *         '<img src="http://twitter.github.io/bootstrap/assets/img/bootstrap-mdo-sfmoma-01.jpg"/>',
+ *         '<img src="https://twitter.github.io/bootstrap/assets/img/bootstrap-mdo-sfmoma-01.jpg"/>',
  *         // equivalent to the above
- *         ['content' => '<img src="http://twitter.github.io/bootstrap/assets/img/bootstrap-mdo-sfmoma-02.jpg"/>'],
+ *         ['content' => '<img src="https://twitter.github.io/bootstrap/assets/img/bootstrap-mdo-sfmoma-02.jpg"/>'],
  *         // the item contains both the image and the caption
  *         [
- *             'content' => '<img src="http://twitter.github.io/bootstrap/assets/img/bootstrap-mdo-sfmoma-03.jpg"/>',
+ *             'content' => '<img src="https://twitter.github.io/bootstrap/assets/img/bootstrap-mdo-sfmoma-03.jpg"/>',
  *             'caption' => '<h4>This is title</h4><p>This is the caption text</p>',
  *             'captionOptions' => ['class' => ['d-none', 'd-md-block']]
  *             'options' => [...],
@@ -33,7 +33,7 @@ use yii\helpers\ArrayHelper;
  * ]);
  * ```
  *
- * @see https://getbootstrap.com/docs/4.2/components/carousel/
+ * @see https://getbootstrap.com/docs/4.5/components/carousel/
  * @author Antonio Ramirez <amigo.cobos@gmail.com>
  * @author Simon Karlen <simi.albi@outlook.com>
  */
@@ -58,7 +58,7 @@ class Carousel extends Widget
      * ```php
      * [
      *     // required, slide content (HTML), such as an image tag
-     *     'content' => '<img src="http://twitter.github.io/bootstrap/assets/img/bootstrap-mdo-sfmoma-01.jpg"/>',
+     *     'content' => '<img src="https://twitter.github.io/bootstrap/assets/img/bootstrap-mdo-sfmoma-01.jpg"/>',
      *     // optional, the caption (HTML) of the slide
      *     'caption' => '<h4>This is title</h4><p>This is the caption text</p>',
      *     // optional the HTML attributes of the slide container
@@ -83,9 +83,9 @@ class Carousel extends Widget
     public function init()
     {
         parent::init();
-        Html::addCssClass($this->options, ['widget' => 'carousel', 'slide']);
+        Html::addCssClass($this->options, ['widget' => 'carousel slide']);
         if ($this->crossfade) {
-            Html::addCssClass($this->options, 'carousel-fade');
+            Html::addCssClass($this->options, ['animation' => 'carousel-fade']);
         }
     }
 
@@ -118,7 +118,7 @@ class Carousel extends Widget
         for ($i = 0, $count = count($this->items); $i < $count; $i++) {
             $options = ['data-target' => '#' . $this->options['id'], 'data-slide-to' => $i];
             if ($i === 0) {
-                Html::addCssClass($options, 'active');
+                Html::addCssClass($options, ['activate' => 'active']);
             }
             $indicators[] = Html::tag('li', '', $options);
         }
@@ -170,7 +170,7 @@ class Carousel extends Widget
 
         Html::addCssClass($options, ['widget' => 'carousel-item']);
         if ($index === 0) {
-            Html::addCssClass($options, 'active');
+            Html::addCssClass($options, ['activate' => 'active']);
         }
 
         return Html::tag('div', $content . "\n" . $caption, $options);

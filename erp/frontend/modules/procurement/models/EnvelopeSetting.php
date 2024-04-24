@@ -62,4 +62,8 @@ class EnvelopeSetting extends \yii\db\ActiveRecord
             'timestamp' => 'Timestamp',
         ];
     }
+    public function getSections()
+   {
+    return SectionSettings::find()->where(['like','envelope_code',$this->code])->all();
+    }
 }

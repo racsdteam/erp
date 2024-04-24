@@ -111,8 +111,7 @@ return array (
       '@kartik/growl' => $vendorDir . '/kartik-v/yii2-widget-growl',
     ),
   ),
-  
-   'kartik-v/yii2-widget-colorinput' => 
+  'kartik-v/yii2-widget-colorinput' => 
   array (
     'name' => 'kartik-v/yii2-widget-colorinput',
     'version' => '1.1.1.0',
@@ -166,7 +165,7 @@ return array (
       '@yii/gii' => $vendorDir . '/yiisoft/yii2-gii/src',
     ),
   ),
-   'kartik-v/yii2-bootstrap4-dropdown' => 
+  'kartik-v/yii2-bootstrap4-dropdown' => 
   array (
     'name' => 'kartik-v/yii2-bootstrap4-dropdown',
     'alias' => 
@@ -182,7 +181,6 @@ return array (
       '@kartik/tabs' => $vendorDir . '/kartik-v/yii2-tabs-x/src',
     ),
   ),
-  
   'yiisoft/yii2-tinymce' => 
   array (
     'name' => 'yiisoft/yii2-tinymce',
@@ -372,7 +370,7 @@ return array (
       '@kartik/select2' => $vendorDir . '/kartik-v/yii2-widget-select2/src',
     ),
   ),
-   'kartik-v/yii2-widget-depdrop' => 
+  'kartik-v/yii2-widget-depdrop' => 
   array (
     'name' => 'kartik-v/yii2-widget-depdrop',
     'version' => '9999999-dev',
@@ -390,7 +388,7 @@ return array (
       '@kartik/touchspin' => $vendorDir . '/kartik-v/kartik-v-yii2-widget-touchspin/src',
     ),
   ),
-   'kartik-v/kartik-v-yii2-widget-colorinput' => 
+  'kartik-v/kartik-v-yii2-widget-colorinput' => 
   array (
     'name' => 'kartik-v/kartik-v-yii2-widget-colorinput',
     'version' => '9999999-dev',
@@ -402,14 +400,13 @@ return array (
   'yiisoft/yii2-bootstrap4' => 
   array (
     'name' => 'yiisoft/yii2-bootstrap4',
-    'version' => '2.0.8.0',
+    'version' => '2.0.11.0',
     'alias' => 
     array (
       '@yii/bootstrap4' => $vendorDir . '/yiisoft/yii2-bootstrap4/src',
     ),
   ),
-  
-   'NXP' => 
+  'NXP' => 
   array (
     'name' => 'NXP',
     'version' => '2.1.8',
@@ -418,7 +415,6 @@ return array (
       'NXP' => $vendorDir . '/nxp/math-executor/src/NXP',
     ),
   ),
-  
   'unclead/yii2-multiple-input' => 
   array (
     'name' => 'unclead/yii2-multiple-input',
@@ -430,8 +426,7 @@ return array (
       '@unclead/multipleinput/tests' => $vendorDir . '/unclead/yii2-multiple-input/tests',
     ),
   ),
-  
-   'softark/duallistbox' => 
+  'softark/duallistbox' => 
   array (
     'name' => 'softark/duallistbox',
     'version' => '1.3.0.0',
@@ -449,26 +444,16 @@ return array (
       '@Psr/SimpleCache' => $vendorDir . '/psr/simple-cache/src',
     ),
   ),
-'Psr/Http/Message' => 
+  'Psr/Http/Message' => 
   array (
     'name' => 'Psr/Http/Message',
     'version' => '1.5.1.0',
     'alias' => 
     array (
-      '@Psr/Http/Message' => $vendorDir . '/psr/http-factory/src', $vendorDir . '/psr/http-message/src',
+      '@Psr/Http/Message' => $vendorDir . '/psr/http-factory/src',
+      0 => $vendorDir . '/psr/http-message/src',
     ),
   ),
-
-'Psr/Http/Client' => 
-  array (
-    'name' => 'Psr/Http/Client',
-    'version' => '1.5.1.0',
-    'alias' => 
-    array (
-      '@Psr/Http/Client' => $vendorDir . '/psr/http-client/src',
-    ),
-  ),
-  
   'Psr/Http/Client' => 
   array (
     'name' => 'Psr/Http/Client',
@@ -478,8 +463,7 @@ return array (
       '@Psr/Http/Client' => $vendorDir . '/psr/http-client/src',
     ),
   ),
-  
-     'MyCLabs/Enum' => 
+  'MyCLabs/Enum' => 
   array (
     'name' => 'MyCLabs/Enum',
     'version' => '1.5.1.0',
@@ -488,8 +472,7 @@ return array (
       '@MyCLabs/Enum' => $vendorDir . '/myclabs/php-enum/src',
     ),
   ),
-  
-   'ZipStream' => 
+  'ZipStream' => 
   array (
     'name' => 'ZipStream',
     'version' => '1.5.1.0',
@@ -498,10 +481,7 @@ return array (
       '@ZipStream' => $vendorDir . '/maennchen/zipstream-php/src',
     ),
   ),
-  
-  
-  
-    'PhpOffice/PhpSpreadsheet' => 
+  'PhpOffice/PhpSpreadsheet' => 
   array (
     'name' => 'PhpOffice/PhpSpreadsheet',
     'version' => '1.5.1.0',
@@ -510,8 +490,6 @@ return array (
       '@PhpOffice/PhpSpreadsheet' => $vendorDir . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
     ),
   ),
-  
-  //plugin
   'php-excel-templator' => 
   array (
     'name' => 'php-excel-templator',
@@ -521,5 +499,13 @@ return array (
       '@alhimik1986/PhpExcelTemplator' => $vendorDir . '/php-excel-templator/src',
     ),
   ),
-   
+  'yiisoft/yii2-mongodb' => 
+  array (
+    'name' => 'yiisoft/yii2-mongodb',
+    'version' => '3.0.1.0',
+    'alias' => 
+    array (
+      '@yii/mongodb' => $vendorDir . '/yiisoft/yii2-mongodb/src',
+    ),
+  ),
 );

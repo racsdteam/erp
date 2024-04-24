@@ -6,8 +6,8 @@
     "license": "BSD-3-Clause",
     "support": {
         "issues": "https://github.com/yiisoft/yii2-bootstrap4/issues",
-        "forum": "http://www.yiiframework.com/forum/",
-        "wiki": "http://www.yiiframework.com/wiki/",
+        "forum": "https://www.yiiframework.com/forum/",
+        "wiki": "https://www.yiiframework.com/wiki/",
         "irc": "irc://irc.freenode.net/yii",
         "source": "https://github.com/yiisoft/yii2-bootstrap4"
     },
@@ -15,12 +15,12 @@
         {
             "name": "Qiang Xue",
             "email": "qiang.xue@gmail.com",
-            "homepage": "http://www.yiiframework.com/"
+            "homepage": "https://www.yiiframework.com/"
         },
         {
             "name": "Alexander Makarov",
             "email": "sam@rmcreative.ru",
-            "homepage": "http://rmcreative.ru/"
+            "homepage": "https://rmcreative.ru/"
         },
         {
             "name": "Antonio Ramirez",
@@ -36,12 +36,13 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "~2.0",
+        "yiisoft/yii2": "^2.0.43",
         "npm-asset/bootstrap": "^4.3"
     },
     "require-dev": {
         "yiisoft/yii2-coding-standards": "~2.0",
-        "phpunit/phpunit": "<7"
+        "cweagans/composer-patches": "^1.7",
+        "phpunit/phpunit": "4.8.34"
     },
     "repositories": [
         {
@@ -62,6 +63,21 @@
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
+        },
+        "patches": {
+            "phpunit/phpunit-mock-objects": {
+                "Fix PHP 7 and 8 compatibility": "https://yiisoft.github.io/phpunit-patches/phpunit_mock_objects.patch"
+            },
+            "phpunit/phpunit": {
+                "Fix PHP 7 compatibility": "https://yiisoft.github.io/phpunit-patches/phpunit_php7.patch",
+                "Fix PHP 8 compatibility": "https://yiisoft.github.io/phpunit-patches/phpunit_php8.patch"
+            }
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "cweagans/composer-patches": true,
+            "yiisoft/yii2-composer": true
         }
     }
 }

@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
+ * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @license https://www.yiiframework.com/license/
  */
 
 namespace yii\bootstrap4;
@@ -57,7 +57,7 @@ use yii\base\InvalidConfigException;
  * ```
  *
  * @see ActiveField for details on the [[fieldConfig]] options
- * @see http://getbootstrap.com/css/#forms
+ * @see https://getbootstrap.com/docs/4.5/components/forms/
  *
  * @author Michael Härtl <haertl.mike@gmail.com>
  * @author Simon Karlen <simi.albi@outlook.com>
@@ -123,14 +123,14 @@ class ActiveForm extends \yii\widgets\ActiveForm
         }
 
         if ($this->layout === self::LAYOUT_INLINE) {
-            Html::addCssClass($this->options, 'form-inline');
+            Html::addCssClass($this->options, ['widget' => 'form-inline']);
         }
         parent::init();
     }
 
     /**
      * {@inheritdoc}
-     * @return \yii\widgets\ActiveField
+     * @return \yii\bootstrap4\ActiveField
      */
     public function field($model, $attribute, $options = [])
     {
