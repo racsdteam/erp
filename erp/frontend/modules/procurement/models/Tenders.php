@@ -17,6 +17,17 @@ class Tenders extends \yii\mongodb\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    public $uploaded_file1;
+    public $uploaded_file2;
+    public $uploaded_file3;
+    const STATUS_TYPE_DRAFT='Draft';//--active
+    const STATUS_TYPE_SUBM='Submited';//--notactive employee
+    const STATUS_TYPE_IN_PROG='In Progress';//--notactive
+    const STATUS_TYPE_APP='Approved';//--termited
+    const STATUS_TYPE_CANCELED='Canceled';//--retired
+    const STATUS_TYPE_COMP='Completed';//--laid off
+
+
     public static function collectionName()
     {
         return ['tender', 'tenders'];
@@ -46,9 +57,13 @@ class Tenders extends \yii\mongodb\ActiveRecord
             'bid_validity_periode',
             'tender_doc_charges_amount',
             'tender_doc_charges_status',
+            'dao',
+            'rfq',
+            'rfp',
             'user_id',
             'created_at',
-            'updated_at'
+            'updated_at',
+            'status'
         ];
     }
 
@@ -60,6 +75,9 @@ class Tenders extends \yii\mongodb\ActiveRecord
         return [
             [['title','procurement_method_code',],'string'],
             [['number_lots',],'number'],
+            [['uploaded_file1'], 'file'],
+            [['uploaded_file2'], 'file'],
+            [['uploaded_file3'], 'file'],
         ];
     }
 
@@ -115,5 +133,21 @@ class Tenders extends \yii\mongodb\ActiveRecord
     public function getLots()
 {
  return TenderLots::find()->where(['tender_id'=>$this->_id]) ->orderBy(['number' => SORT_ASC])->all();
+}
+
+public function getStages()
+{
+ return TenderStages::find()
+ ->where(["and",['like','procurement_methods_code',$this->procurement_method_code],['like','procurement_categories_code',$this->procurement_category_code]])
+ ->orderBy(["id" => SORT_DESC])
+ ->one();
+}
+public function getStageInstances()
+{
+ return TenderStageIntstances::find()->where(['tender_id'=>$this->_id]) ->orderBy(['sequence_number' => SORT_ASC])->all();
+}
+public function generateNumner()
+{
+ return Yii::$app->procUtil->generateTenderCode($this->procurement_method_code,$this->procurement_category_code);
 }
 }

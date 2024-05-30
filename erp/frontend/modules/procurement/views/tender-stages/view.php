@@ -129,7 +129,7 @@ $this->params['breadcrumbs'][] = $this->title;
              'buttons'        => [
                      
                       'update' => function ($url, $model_sequency, $key)use ($model) {
-                        return Html::a('<i class="fas fa-pencil-alt"></i>', ["/procurement//tender-stage-sequence-settings/update", 'id' => $model_sequency->id,'stage' => $model->code], ['class'=>['text-success action-create'],
+                        return Html::a('<i class="fas fa-pencil-alt"></i>', ["/procurement/tender-stage-sequence-settings/update", 'id' => $model_sequency->id,'stage' => $model->code], ['class'=>['text-success action-create'],
                             'title' => Yii::t('app', 'Update')
                         ]);
                     },
@@ -155,6 +155,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'tender_stage_setting_code',
+            [
+                'label'=>'Tender Stage Settin',
+                'value'=>function ($data) {
+                    
+                    return $data->stageSetting->name;
+           },
+        ],  
             'sequence_number',
             'is_active',
             'timestamp',

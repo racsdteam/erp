@@ -140,6 +140,7 @@ class SectionSettingsController extends Controller
     protected function findModel($id)
     {
         if (($model = SectionSettings::findOne($id)) !== null) {
+            $model->envelope_code=Json::decode($$model->envelope_code, $asArray = true);
             return $model;
         }
 

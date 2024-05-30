@@ -9,6 +9,19 @@ use yii\grid\GridView;
 $this->title = 'Tenders';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<?php
+
+if (Yii::$app->session->hasFlash('success')) {
+
+    Yii::$app->alert->showSuccess(Yii::$app->session->getFlash('success'));
+}
+
+
+if (Yii::$app->session->hasFlash('error')) {
+
+    Yii::$app->alert->showError(Yii::$app->session->getFlash('error'));
+}
+?>
 <div class="tenders-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
@@ -23,9 +36,9 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             '_id',
-            'name',
+            'title',
             'number',
-           // '',
+            // '',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

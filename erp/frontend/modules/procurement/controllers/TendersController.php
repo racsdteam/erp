@@ -8,7 +8,8 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use frontend\modules\procurement\models\TenderStageIntstances;
+use yii\web\UploadedFile;
 /**
  * TendersController implements the CRUD actions for Tenders model.
  */
@@ -21,7 +22,7 @@ class TendersController extends Controller
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -52,11 +53,34 @@ class TendersController extends Controller
      */
     public function actionView($id)
     {
+        $tenderStageIntstances= new TenderStageIntstances;
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $this->findModel($id),'tenderStageIntstances'=> $tenderStageIntstances
         ]);
     }
-
+    public function actionSubmitionView($id)
+    {
+        $tenderStageIntstances= new TenderStageIntstances;
+        return $this->render('submition-view', [
+            'model' => $this->findModel($id)
+        ]);
+    }
+    public function actionSubmition($id,$number)
+    {
+        $model = $this->findModel($id);
+        if (Yii::$app->request->isPost) {
+            $model->number=$number;
+            $model->status=Tenders::STATUS_TYPE_SUBM;
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success','Tender is successfull saved !');
+                return $this->redirect(['index']);
+            }
+        }
+        Yii::$app->session->setFlash('Error','Tender is not saved !');
+        return $this->render('submition-view', [
+            'model' => $this->findModel($id)
+        ]);
+    }
     /**
      * Creates a new Tenders model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -70,9 +94,74 @@ class TendersController extends Controller
             $post_data=Yii::$app->request->post();
             $model->attributes=array_filter($post_data['Tenders']);
             $model->user_id=$user_id;
-            if ($model->save()) {
-                // Record saved successfully
+            $model->status=Tenders::STATUS_TYPE_DRAFT;
+            $model->uploaded_file1 = UploadedFile::getInstance($model, 'uploaded_file1');
+            $model->uploaded_file2 = UploadedFile::getInstance($model, 'uploaded_file2');
+            $model->uploaded_file3 = UploadedFile::getInstance($model, 'uploaded_file3');
 
+            if($model->uploaded_file1!=null){
+                 
+                $file1=$model->uploaded_file1;
+          
+          $exponent = 3; // Amount of digits
+$min = pow(10,$exponent);
+$max = pow(10,$exponent+1)-1;
+$value = rand($min, $max);
+$unification= date("Ymdhms")."".$value;
+
+$temp= explode(".",   $file1->name);
+$ext = end($temp);
+$path_to_doc1='uploads/procurement/DAO/'. $unification.".{$ext}";
+$model->dao=$path_to_doc1;
+
+          }
+          if($model->uploaded_file2!=null){
+                 
+            $file2=$model->uploaded_file2;
+      
+      $exponent = 3; // Amount of digits
+$min = pow(10,$exponent);
+$max = pow(10,$exponent+1)-1;
+$value = rand($min, $max);
+$unification= date("Ymdhms")."".$value;
+
+$temp= explode(".",   $file2->name);
+$ext = end($temp);
+$path_to_doc2='uploads/procurement/RFQ/'. $unification.".{$ext}";
+$model->rfq=$path_to_doc2;
+
+      }
+
+      if($model->uploaded_file3!=null){
+                 
+        $file3=$model->uploaded_file3;
+  
+  $exponent = 3; // Amount of digits
+$min = pow(10,$exponent);
+$max = pow(10,$exponent+1)-1;
+$value = rand($min, $max);
+$unification= date("Ymdhms")."".$value;
+
+$temp= explode(".",   $file3->name);
+$ext = end($temp);
+$path_to_doc3='uploads/procurement/RFP/'. $unification.".{$ext}";
+$model->rfp=$path_to_doc3;
+
+  }
+
+
+            if ($model->save()) {
+                if($model->dao!=null){
+                $file1->saveAs($path_to_doc1); 
+                }
+                if($model->rfq!=null){
+                $file2->saveAs($path_to_doc2); 
+                }
+                if($model->rfp!=null){
+                $file3->saveAs($path_to_doc3); 
+                }
+                // Record saved successfully
+                Yii::$app->session->setFlash('success','Tender is successfull Created !');
                 return $this->redirect(['view','id'=>$model->_id]);
             }
         }
@@ -98,7 +187,71 @@ class TendersController extends Controller
             $post_data=Yii::$app->request->post();
             $model->attributes=array_filter($post_data['Tenders']);
             $model->user_id=$user_id;
+            $model->status=Tenders::STATUS_TYPE_DRAFT;
+            $model->uploaded_file1 = UploadedFile::getInstance($model, 'uploaded_file1');
+            $model->uploaded_file2 = UploadedFile::getInstance($model, 'uploaded_file2');
+            $model->uploaded_file3 = UploadedFile::getInstance($model, 'uploaded_file3');
+            if($model->uploaded_file1!=null){
+                 
+                $file1=$model->uploaded_file1;
+          
+          $exponent = 3; // Amount of digits
+$min = pow(10,$exponent);
+$max = pow(10,$exponent+1)-1;
+$value = rand($min, $max);
+$unification= date("Ymdhms")."".$value;
+
+$temp= explode(".",   $file1->name);
+$ext = end($temp);
+$path_to_doc1='uploads/procurement/DAO/'. $unification.".{$ext}";
+$model->dao=$path_to_doc1;
+
+          }
+          if($model->uploaded_file2!=null){
+                 
+            $file2=$model->uploaded_file2;
+      
+      $exponent = 3; // Amount of digits
+$min = pow(10,$exponent);
+$max = pow(10,$exponent+1)-1;
+$value = rand($min, $max);
+$unification= date("Ymdhms")."".$value;
+
+$temp= explode(".",   $file2->name);
+$ext = end($temp);
+$path_to_doc2='uploads/procurement/RFQ/'. $unification.".{$ext}";
+$model->rfq=$path_to_doc2;
+
+      }
+
+      if($model->uploaded_file3!=null){
+                 
+        $file3=$model->uploaded_file3;
+  
+  $exponent = 3; // Amount of digits
+$min = pow(10,$exponent);
+$max = pow(10,$exponent+1)-1;
+$value = rand($min, $max);
+$unification= date("Ymdhms")."".$value;
+
+$temp= explode(".",   $file3->name);
+$ext = end($temp);
+$path_to_doc3='uploads/procurement/RFP/'. $unification.".{$ext}";
+$model->rfp=$path_to_doc3;
+
+  }
             if ($model->save()) {
+                if($model->uploaded_file1!=null){
+                    $file1->saveAs($path_to_doc1); 
+                    }
+                    if($model->uploaded_file2!=null){
+                    $file2->saveAs($path_to_doc2); 
+                    }
+                    if($model->uploaded_file3!=null){
+                    $file3->saveAs($path_to_doc3); 
+                    }
+
+                    Yii::$app->session->setFlash('success','Tender is successfull Updated !');
                 return $this->redirect(['view','id'=>(string) $model->_id]);
             }
         }

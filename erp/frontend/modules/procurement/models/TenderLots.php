@@ -120,4 +120,23 @@ class TenderLots extends \yii\mongodb\ActiveRecord
        
     return $envelopes;
 }
+public function getItems()
+{
+    $items =TenderItems::find()->where(['lot_id'=>$this->_id])->all();
+       
+    return $items;
+}
+
+public function getDocuments($section_code)
+{
+    $docs=TenderDocuments::find()->where(['lot_id'=>$this->_id,'section_code'=>$section_code])->all();
+       
+    return  $docs;
+}
+public function getStaffs($section_code)
+{
+    $docs=TenderStaffs::find()->where(['lot_id'=>$this->_id,'section_code'=>$section_code])->all();
+       
+    return  $docs;
+}
 }

@@ -5,7 +5,7 @@ namespace frontend\modules\logistic\controllers;
 use Yii;
 use common\models\ReceptionGoods;
 use common\models\ItemsReception;
-use common\models\ ItemsReceptionSupporting;
+use common\models\ItemsReceptionSupporting;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;

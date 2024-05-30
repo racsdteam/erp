@@ -60,7 +60,6 @@ class ProcurementPlansSearch extends ProcurementPlans
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'user' => $this->user,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);

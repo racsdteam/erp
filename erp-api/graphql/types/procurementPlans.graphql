@@ -1,0 +1,6 @@
+type ProcurementPlan {
+    id: ID!
+    name: String!
+    status: String!
+    procurementActivity:[ProcurementActivity] @hasMany
+}

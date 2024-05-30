@@ -1,0 +1,4 @@
+extend type Query {
+    procumentsPlans : [ProcurementPlan!]! @paginate
+    procumentsPlan(id: ID @eq): ProcurementPlan @find
+}

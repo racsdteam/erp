@@ -141,6 +141,8 @@ class EnvelopeSettingController extends Controller
     protected function findModel($id)
     {
         if (($model = EnvelopeSetting::findOne($id)) !== null) {
+            $model->procurement_methods_code=Json::decode($model->procurement_methods_code, $asArray = true);
+             $model->procurement_categories_code=Json::decode($model->procurement_categories_code, $asArray = true);
             return $model;
         }
 

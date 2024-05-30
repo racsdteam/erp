@@ -59,4 +59,9 @@ class TenderStageSequenceSettings extends \yii\db\ActiveRecord
             'timestamp' => 'Timestamp',
         ];
     }
+
+    public function getStageSetting()
+{
+ return $this->hasOne(TenderStageSettings::class, ['code' => 'tender_stage_setting_code']);
+}
 }

@@ -39,7 +39,7 @@ class SectionSettings extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'code', 'envelope_code', 'user_id'], 'required'],
+            [['name', 'code', 'envelope_code', 'user_id','is_staffing'], 'required'],
             [['user_id'], 'integer'],
             [['name'], 'string', 'max' => 1000],
             [['code'], 'string', 'max' => 8],
@@ -56,6 +56,7 @@ class SectionSettings extends \yii\db\ActiveRecord
             'name' => 'Name',
             'code' => 'Code',
             'envelope_code' => 'Envelope Code',
+            'is_staffing' => 'Is the section for staffing?',
             'user_id' => 'User ID',
             'timestamp' => 'Timestamp',
         ];

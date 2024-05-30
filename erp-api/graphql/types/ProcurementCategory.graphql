@@ -1,0 +1,7 @@
+type ProcurementCategory {
+    id: ID!
+    name: String!
+    code: String!
+    description: String!
+    display_order: String!
+}

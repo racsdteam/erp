@@ -1,0 +1,7 @@
+type ProcurementActivityDate {
+    id: ID!
+    date_type: String!
+    planned_date: String!
+    actual_date: String!
+    sequence: String!
+}

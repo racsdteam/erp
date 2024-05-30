@@ -45,7 +45,8 @@ use frontend\modules\procurement\models\EnvelopeSetting;
         ],
     ])->label("Select Envelope");
 ?>
-
+<?=  $form->field($model, 'is_staffing')->dropDownList([true=>"Yes",false=>"No",],['prompt'=>'Select ','class'=>['form-control select2'],]);?>
+    
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

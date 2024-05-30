@@ -1,0 +1,6 @@
+type ProcurementMethod {
+    id: ID!
+    name: String!
+    code: String!
+    description: String!
+}

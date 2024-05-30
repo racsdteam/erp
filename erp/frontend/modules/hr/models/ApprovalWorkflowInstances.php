@@ -5,7 +5,7 @@ namespace frontend\modules\hr\models;
 use Yii;
 use common\models\User;
 use common\models\UserHelper;
-use common\models\ AssignmentUserResolver;
+use common\models\AssignmentUserResolver;
 
 /**
  * This is the model class for table "approval_workflow_instances".

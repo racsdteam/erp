@@ -292,7 +292,7 @@ foreach($lvs as $l){
 <?php
 $label=$model->isNewRecord?'Save':'Update';
 $script = <<< JS
-$(document).ready(function(){
+ $(document).ready(function(){
  
 	$('.date').bootstrapMaterialDatePicker
 			({

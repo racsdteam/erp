@@ -1,0 +1,4 @@
+extend type Query {
+    procurementMethods : [ProcurementMethod!]! @paginate
+    procurementMethod(code: String @eq): ProcurementMethod @find
+}

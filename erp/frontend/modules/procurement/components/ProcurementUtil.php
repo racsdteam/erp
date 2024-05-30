@@ -101,20 +101,27 @@ public function pending($_user,$filter_new, $count=0){
    }
 
    public function generateTenderCode($procurement_method_code,$procurement_category_code){
-       
-    $last_tender= Tenders::find()->where(['number' => ['$ne' => null]])->orderBy(['_id' => SORT_DESC])->limit(1)->one();
+    if(1<= (int) date("m") and 6>= (int) date("m")):
+        $fin_year= ((int)date("Y")-1)."-".date("Y");
+    else:
+        $fin_year= date("Y")."-".((int)date("Y")+1);
+    endif;   
+
+    $last_tender= Tenders::find()->where(['like','number',$fin_year])->orderBy(['_id' => SORT_DESC])->one();
     $pad_base=1;
     
-if(1<= (int) date("m") and 6>= (int) date("m")):
-    $fin_year= ((int)date("y")-1)."-".date("y");
-else:
-    $fin_year= date("y")."-".((int)date("y")+1);
-endif;
+
     
     if($last_tender==null){
-        return  "N0:001/".$procurement_category_code."/".$procurement_category_code."/".$fin_year."/RAC";
+        return  "N0:001/".$procurement_category_code."/".$procurement_method_code."/".$fin_year."/RAC";
             }
-            return  "N0:001/".$procurement_category_code."/".$procurement_category_code."/".$fin_year."/RAC";
+
+           
+                $sequence1=explode("/",$last_tender->number);
+                $sequence2=explode(":",$sequence1[0]);
+                $pad_base=(int) filter_var($sequence2[1], FILTER_SANITIZE_NUMBER_INT);
+                ++$pad_base;
+return  "N0:".sprintf('%03d',$pad_base)."/".$procurement_category_code."/".$procurement_method_code."/".$fin_year."/RAC";
 }
 
  } 

@@ -73,6 +73,6 @@ class TenderStages extends \yii\db\ActiveRecord
 }
 public function getStageSequencies()
 {
- return $this->hasMany(TenderStageSequenceSettings::className(), ['tender_stage_code' => 'code']);
+ return $this->hasMany(TenderStageSequenceSettings::class, ['tender_stage_code' => 'code']);
 }
 }

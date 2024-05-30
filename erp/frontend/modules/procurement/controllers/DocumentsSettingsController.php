@@ -68,10 +68,14 @@ class DocumentsSettingsController extends Controller
         $model = new DocumentsSettings();
 
          if(Yii::$app->request->post()){
-            
+            $params=array();
              $user_id=Yii::$app->user->identity->user_id;
             $model->attributes=$_POST['DocumentsSettings'];
-             $model->envelope_code=Json::encode($model->envelope_code,JSON_UNESCAPED_SLASHES);
+            $params["is_required"]=$_POST['DocumentsSettings']['required_status'];
+            $params["more_docs_status"]=$_POST['DocumentsSettings']['more_docs_status'];
+            $params["min_docs"]=$_POST['DocumentsSettings']['min_docs'];
+            $params["max_docs"]=$_POST['DocumentsSettings']['max_docs'];
+             $model->params=Json::encode($params,JSON_UNESCAPED_SLASHES);
              $model->user_id=$user_id;
              $flag=$model->save();
              if($flag)
@@ -98,10 +102,14 @@ class DocumentsSettingsController extends Controller
         $model = $this->findModel($id);
 
           if(Yii::$app->request->post()){
-            
+            $params=array();
              $user_id=Yii::$app->user->identity->user_id;
             $model->attributes=$_POST['DocumentsSettings'];
-             $model->envelope_code=Json::encode($model->envelope_code,JSON_UNESCAPED_SLASHES);
+            $params["is_required"]=$_POST['DocumentsSettings']['required_status'];
+            $params["more_docs_status"]=$_POST['DocumentsSettings']['more_docs_status'];
+            $params["min_docs"]=$_POST['DocumentsSettings']['min_docs'];
+            $params["max_docs"]=$_POST['DocumentsSettings']['max_docs'];
+             $model->params=Json::encode($params,JSON_UNESCAPED_SLASHES);
              $model->user_id=$user_id;
              $flag=$model->save();
              if($flag)
