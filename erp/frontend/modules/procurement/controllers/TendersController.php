@@ -54,14 +54,21 @@ class TendersController extends Controller
     public function actionView($id)
     {
         $tenderStageIntstances= new TenderStageIntstances;
-        return $this->render('view', [
-            'model' => $this->findModel($id),'tenderStageIntstances'=> $tenderStageIntstances
+        $model= $this->findModel($id);
+        if( $model->status== Tenders::STATUS_TYPE_DRAFT)
+        {
+            return $this->render('view', [
+                'model' => $model,'tenderStageIntstances'=> $tenderStageIntstances
+            ]);
+        }
+        return $this->render('stagesManagement', [
+            'model' => $model,'tenderStageIntstances'=> $tenderStageIntstances
         ]);
     }
     public function actionSubmitionView($id)
     {
         $tenderStageIntstances= new TenderStageIntstances;
-        return $this->render('submition-view', [
+        return $this->render('submition', [
             'model' => $this->findModel($id)
         ]);
     }

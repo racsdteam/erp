@@ -21,7 +21,7 @@ class IncotermsSetting extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'incoterms_setting';
+        return 'incoterms_settings';
     }
 
     /**

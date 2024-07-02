@@ -1,11 +1,11 @@
 type ProcurementActivity {
     id: ID!
-    end_user_org_unit: String!
-    description: String!
-    code: String!
-    procurement_category: String!
-    procurement_method: String!
-    funding_source: String!
-    status: String!
+    end_user_org_unit: String
+    description: String
+    code: String
+    procurement_category: String
+    procurement_method: String
+    funding_source: String
+    status: String
     procurementActivityDate:[ProcurementActivityDate] @hasMany
 }

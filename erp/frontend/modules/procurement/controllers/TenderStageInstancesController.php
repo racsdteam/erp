@@ -3,6 +3,7 @@
 namespace frontend\modules\procurement\controllers;
 
 use Yii;
+use yii\helpers\Html;
 use frontend\modules\procurement\models\TenderStageIntstances;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -76,6 +77,7 @@ class TenderStageInstancesController extends Controller
                                
                             $user_id=Yii::$app->user->identity->user_id;
                            $model->user_id=$user_id;
+                           $model->status=TenderStageIntstances::STATUS_TYPE_NOT_START;
             if (! ($flag = $model->save(false))) {
                 $transaction->rollBack();
                
@@ -114,9 +116,8 @@ class TenderStageInstancesController extends Controller
             $user_id=Yii::$app->user->identity->user_id;
             $post_data=Yii::$app->request->post();
             $model->attributes=array_filter($post_data['TenderStageIntstances']);
-            $model->documents=Json::encode($model->documents,JSON_UNESCAPED_SLASHES);
+            $model->status=TenderStageIntstances::STATUS_TYPE_NOT_START;
             $model->user_id=$user_id;
-            $model->section_code=$section_code;
             if ($model->save()) {
                 return $this->redirect(['tenders/view','id'=>(string) $tender_id]);
             }

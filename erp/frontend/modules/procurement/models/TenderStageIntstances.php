@@ -17,6 +17,11 @@ class TenderStageIntstances extends \yii\mongodb\ActiveRecord
     /**
      * {@inheritdoc}
      */
+
+    const STATUS_TYPE_NOT_START='not started';//--not started
+    const STATUS_TYPE_IN_PROG='In Progress';//--notactive
+    const STATUS_TYPE_CANCELED='Canceled';//--retired
+    const STATUS_TYPE_COMP='Completed';//--laid off
     public static function collectionName()
     {
         return ['tender', 'tender_stage_intstances'];
@@ -33,6 +38,7 @@ class TenderStageIntstances extends \yii\mongodb\ActiveRecord
             'stage_name',
             'stage_code',
             'sequence_number',
+            'status',
             'start_date',
             'end_date',
             'user_id',

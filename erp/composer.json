@@ -64,7 +64,9 @@
         "process-timeout": 1800,
         "allow-plugins": {
             "yiisoft/yii2-composer": true
-        }
+        },
+        "minimum-stability": "dev",
+        "prefer-stable": true
     },
     "repositories": [
         {

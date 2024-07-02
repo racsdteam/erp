@@ -116,7 +116,7 @@ class TenderLots extends \yii\mongodb\ActiveRecord
     }
     public function getEnvelopes()
 {
-    $envelopes =EnvelopeSetting::find()->where(['in','code',$this->envelope_code])->all();
+    $envelopes =EnvelopeSettings::find()->where(['in','code',$this->envelope_code])->all();
        
     return $envelopes;
 }

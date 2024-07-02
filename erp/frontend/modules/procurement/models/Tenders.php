@@ -150,4 +150,16 @@ public function generateNumner()
 {
  return Yii::$app->procUtil->generateTenderCode($this->procurement_method_code,$this->procurement_category_code);
 }
+
+public function isTenderInProgress(){
+$checkNotStarted= TenderStageIntstances::find()
+ ->where(["<>",'status',TenderStageIntstances::STATUS_TYPE_NOT_START])
+ ->orderBy(["id" => SORT_DESC])
+ ->one();
+if($checkNotStarted==null){
+    return true;
+}
+return false;
+}
+
 }

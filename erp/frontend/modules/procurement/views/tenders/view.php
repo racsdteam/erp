@@ -636,7 +636,7 @@ Start for Tender Stages information
                     [
                       'class' => 'yii\grid\ActionColumn',
                       'contentOptions' => ['style' => 'width:5%;white-space:nowrap;'],
-                      'template' => '{update}{delete}',
+                      'template' => '{update}',
 
                       'buttons'        => [
 
@@ -646,19 +646,6 @@ Start for Tender Stages information
                             'title' => Yii::t('app', 'Update')
                           ]);
                         },
-
-                        'delete' => function ($url, $model_sequency, $key) use ($model) {
-
-                          return Html::a('<i class="fas fa-times"></i>', ["/procurement/tender-items/delete", 'id' => (string) $model_sequency->_id, 'tender_id' => (string) $model->_id], [
-                            'class' => ['text-danger'],
-                            'title' => Yii::t('app', 'Delete'),
-                            'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this Lot ?'),
-                            'data-method'  => 'post',
-                            'data-pjax'    => '0',
-                          ]);
-                        }
-
-
                       ] //-------end
 
                     ],
@@ -672,6 +659,7 @@ Start for Tender Stages information
                     'sequence_number',
                     'start_date',
                     'end_date',
+                    'status',
 
                   ],
                 ]); ?>

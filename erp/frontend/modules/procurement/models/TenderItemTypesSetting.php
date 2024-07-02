@@ -21,7 +21,7 @@ class TenderItemTypesSetting extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'tender_item_types_setting';
+        return 'tender_item_types_settings';
     }
 
     /**

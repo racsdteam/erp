@@ -1,9 +1,8 @@
 <?php
-
 namespace frontend\modules\procurement\controllers;
 
 use Yii;
-use frontend\modules\procurement\models\EnvelopeSetting;
+use frontend\modules\procurement\models\EnvelopeSettings;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -11,7 +10,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\Json;
 
 /**
- * EnvelopeSettingController implements the CRUD actions for EnvelopeSetting model.
+ * EnvelopeSettingsController implements the CRUD actions for EnvelopeSettings model.
  */
 class EnvelopeSettingController extends Controller
 {
@@ -31,13 +30,13 @@ class EnvelopeSettingController extends Controller
     }
 
     /**
-     * Lists all EnvelopeSetting models.
+     * Lists all EnvelopeSettings models.
      * @return mixed
      */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => EnvelopeSetting::find(),
+            'query' => EnvelopeSettings::find(),
         ]);
 
         return $this->render('index', [
@@ -46,7 +45,7 @@ class EnvelopeSettingController extends Controller
     }
 
     /**
-     * Displays a single EnvelopeSetting model.
+     * Displays a single EnvelopeSettings model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -59,18 +58,18 @@ class EnvelopeSettingController extends Controller
     }
 
     /**
-     * Creates a new EnvelopeSetting model.
+     * Creates a new EnvelopeSettings model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new EnvelopeSetting();
+        $model = new EnvelopeSettings();
 
             if(Yii::$app->request->post()){
             
              $user_id=Yii::$app->user->identity->user_id;
-            $model->attributes=$_POST['EnvelopeSetting'];
+            $model->attributes=$_POST['EnvelopeSettings'];
              $model->procurement_methods_code=Json::encode($model->procurement_methods_code,JSON_UNESCAPED_SLASHES);
              $model->procurement_categories_code=Json::encode($model->procurement_categories_code,JSON_UNESCAPED_SLASHES);
              $model->user_id=$user_id;
@@ -87,7 +86,7 @@ class EnvelopeSettingController extends Controller
     }
 
     /**
-     * Updates an existing EnvelopeSetting model.
+     * Updates an existing EnvelopeSettings model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -100,7 +99,7 @@ class EnvelopeSettingController extends Controller
         if(Yii::$app->request->post()){
             
              $user_id=Yii::$app->user->identity->user_id;
-            $model->attributes=$_POST['EnvelopeSetting'];
+            $model->attributes=$_POST['EnvelopeSettings'];
              $model->procurement_methods_code=Json::encode($model->procurement_methods_code,JSON_UNESCAPED_SLASHES);
              $model->procurement_categories_code=Json::encode($model->procurement_categories_code,JSON_UNESCAPED_SLASHES);
              $model->user_id=$user_id;
@@ -118,7 +117,7 @@ class EnvelopeSettingController extends Controller
     }
 
     /**
-     * Deletes an existing EnvelopeSetting model.
+     * Deletes an existing EnvelopeSettings model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -132,15 +131,15 @@ class EnvelopeSettingController extends Controller
     }
 
     /**
-     * Finds the EnvelopeSetting model based on its primary key value.
+     * Finds the EnvelopeSettings model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return EnvelopeSetting the loaded model
+     * @return EnvelopeSettings the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = EnvelopeSetting::findOne($id)) !== null) {
+        if (($model = EnvelopeSettings::findOne($id)) !== null) {
             $model->procurement_methods_code=Json::decode($model->procurement_methods_code, $asArray = true);
              $model->procurement_categories_code=Json::decode($model->procurement_categories_code, $asArray = true);
             return $model;
